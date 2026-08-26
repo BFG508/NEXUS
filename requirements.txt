@@ -1,0 +1,8 @@
+# Data Manipulation & Mathematical Calculations
+numpy>=1.24.0
+
+# Data Visualization & Charting
+matplotlib>=3.7.0
+
+# Interactive execution environment
+jupyter>=1.0.0
