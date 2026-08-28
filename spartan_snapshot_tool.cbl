@@ -1,0 +1,46 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. SPARTAN-SNAPSHOT-TOOL.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT INDEXED-DB ASSIGN TO "spartan_tactical.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS DB-NODE-ID
+               FILE STATUS IS WS-DB-STATUS.
+           SELECT SNAPSHOT-FILE ASSIGN TO "spartan_snapshot.txt"
+               ORGANIZATION IS LINE SEQUENTIAL.
+       DATA DIVISION.
+       FILE SECTION.
+       FD INDEXED-DB.
+       01 DB-REC.
+          05 DB-NODE-TYPE PIC X(10).
+          05 DB-NODE-ID PIC X(10).
+          05 DB-INTEGRITY PIC 9(03).
+          05 DB-DELTA-V PIC 9(05).
+       FD SNAPSHOT-FILE.
+       01 SNAPSHOT-REC PIC X(28).
+       WORKING-STORAGE SECTION.
+       01 WS-DB-STATUS PIC X(02).
+       01 WS-EOF PIC X VALUE 'N'.
+          88 END-OF-DB VALUE 'Y'.
+       01 WS-COUNT PIC 9(06) VALUE ZERO.
+       PROCEDURE DIVISION.
+       MAIN.
+           OPEN INPUT INDEXED-DB
+           IF WS-DB-STATUS NOT = "00"
+               DISPLAY "[SPARTAN] Indexed DB missing. Run spartan_core first."
+               STOP RUN
+           END-IF
+           OPEN OUTPUT SNAPSHOT-FILE
+           READ INDEXED-DB NEXT RECORD AT END SET END-OF-DB TO TRUE END-READ
+           PERFORM UNTIL END-OF-DB
+               STRING DB-NODE-TYPE DB-NODE-ID DB-INTEGRITY DB-DELTA-V
+                   DELIMITED BY SIZE INTO SNAPSHOT-REC
+               WRITE SNAPSHOT-REC
+               ADD 1 TO WS-COUNT
+               READ INDEXED-DB NEXT RECORD AT END SET END-OF-DB TO TRUE END-READ
+           END-PERFORM
+           CLOSE INDEXED-DB SNAPSHOT-FILE
+           DISPLAY "[SPARTAN] Snapshot records: " WS-COUNT
+           STOP RUN.
