@@ -1,0 +1,76 @@
+/* www/css/styles.css */
+/* Minimalist dark theme for a space simulation app */
+
+/* --- General Theme Definitions --- */
+
+/* Main application body */
+body {
+    background-color: #0b0c10; /* Deep space dark background */
+    color: #c5c6c7;            /* Light grey text for high readability */
+    font-family: "Courier New", Courier, monospace; /* Terminal-like font */
+}
+
+/* Sidebar parameter panel styling */
+.well {
+    background-color: #1f2833; /* Slightly lighter dark background to pop out */
+    border: 1px solid #45a29e; /* Muted cyan border */
+}
+
+/* Section headers */
+h1, h2, h3 {
+    color: #66fcf1; /* Bright cyan for emphasis */
+}
+
+/* --- UI Navigation Tabs (e.g., Planetary Database) --- */
+
+/* Default (inactive) tab styling */
+.nav-tabs > li > a {
+    color: #ffffff !important; /* Forces the tab text to be pure white */
+    background-color: #1f2833; /* Matches the dark panel background */
+    border: 1px solid #45a29e; /* Muted cyan border */
+}
+
+/* Hover effect for inactive tabs */
+.nav-tabs > li > a:hover {
+    background-color: #45a29e; /* Darker cyan background on mouse hover */
+    color: #ffffff !important; /* Keeps the text white */
+}
+
+/* Active (currently selected) tab styling */
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover {
+    background-color: #66fcf1 !important; /* Bright cyan background to indicate selection */
+    color: #0b0c10 !important;            /* Dark text for maximum contrast against cyan */
+    border-color: #66fcf1 !important;     /* Bright cyan border */
+}
+
+/* --- DT Interactive Table Styling --- */
+
+/* Make table text, headers, and pagination controls white */
+table.dataTable,
+table.dataTable th,
+table.dataTable td,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: #ffffff !important;
+}
+
+/* Remove default white background from table rows */
+table.dataTable tbody tr {
+    background-color: transparent !important;
+}
+
+/* Add a subtle cyan bottom border to cells for visual separation */
+table.dataTable.no-footer {
+    border-bottom: 1px solid #45a29e !important;
+}
+
+/* Hover effect for pagination buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: #0b0c10 !important;
+    background: #66fcf1 !important;
+    border-color: #66fcf1 !important;
+}
