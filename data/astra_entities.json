@@ -1,0 +1,23 @@
+[
+  {
+    "name": "The arans",
+    "attributes": {
+      "conflict_modifier": "0",
+      "tech_rank": "2"
+    }
+  },
+  {
+    "name": "The arians",
+    "attributes": {
+      "conflict_modifier": "1d1-6",
+      "tech_rank": "1"
+    }
+  },
+  {
+    "name": "The arites",
+    "attributes": {
+      "conflict_modifier": "1d1-6",
+      "tech_rank": "5"
+    }
+  }
+]
