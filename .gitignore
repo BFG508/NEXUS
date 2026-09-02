@@ -1,0 +1,9 @@
+.julia/
+results/*
+!results/.gitkeep
+*.ji
+*.so
+*.dylib
+*.dll
+.vscode/
+.DS_Store

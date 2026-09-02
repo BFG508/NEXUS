@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        julia-version: ['1.10', '1.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ matrix.julia-version }}
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+      - name: Scientific smoke tests
+        run: |
+          julia --project=. -e 'using EDEN; p=SimulationParameters(population_size=20, carrying_capacity=20); d,m=run_simulation(p; generations=2); @assert size(d,1)==3'
+          julia --project=. -e 'using EDEN; p=SimulationParameters(population_size=20, carrying_capacity=20, spatial=true, grid_size=(8,8)); d,m=run_simulation(p; generations=2); @assert m.generation==2'
