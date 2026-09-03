@@ -1,0 +1,116 @@
+# Synthetic demonstration corpus only. Replace or extend these entries with
+# legally obtained corpora and complete provenance metadata.
+
+[[documents]]
+id = "ancient_01"
+group = "ancient"
+label = "Ancient synthetic corpus"
+period = "Synthetic ancient-like"
+work = "Synthetic Meditation I"
+author = "SemanticLogos synthetic fixture"
+year = -200
+original_year = -200
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "didactic prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/ancient/synthetic_ancient_01.txt"
+sha256 = "526401ffb9fa5a4ef19d9efd5742c6b7f4b7a19304e188b9be0d831e75740837"
+
+[[documents]]
+id = "ancient_02"
+group = "ancient"
+label = "Ancient synthetic corpus"
+period = "Synthetic ancient-like"
+work = "Synthetic Meditation II"
+author = "SemanticLogos synthetic fixture"
+year = -180
+original_year = -180
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "didactic prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/ancient/synthetic_ancient_02.txt"
+sha256 = "089686550eb4e64f239e2cdf86888f7aeb0fd61d39c7d11552b2d70fcf95256a"
+
+[[documents]]
+id = "enlightenment_01"
+group = "enlightenment"
+label = "Enlightenment synthetic corpus"
+period = "Synthetic rationalist-like"
+work = "Synthetic Treatise I"
+author = "SemanticLogos synthetic fixture"
+year = 1760
+original_year = 1760
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "philosophical prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/enlightenment/synthetic_enlightenment_01.txt"
+sha256 = "292d34f5b11fde1bbf39ceac1cc7464d55bad70c0f56af86a8997e18c469a6e3"
+
+[[documents]]
+id = "enlightenment_02"
+group = "enlightenment"
+label = "Enlightenment synthetic corpus"
+period = "Synthetic rationalist-like"
+work = "Synthetic Treatise II"
+author = "SemanticLogos synthetic fixture"
+year = 1780
+original_year = 1780
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "philosophical prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/enlightenment/synthetic_enlightenment_02.txt"
+sha256 = "5712c4b91e70d882c8d2356b44997d86c523e31aeafc156fc465146691a0c3f9"
+
+[[documents]]
+id = "speculative_01"
+group = "speculative"
+label = "Speculative synthetic corpus"
+period = "Synthetic speculative-like"
+work = "Synthetic Future Dialogue I"
+author = "SemanticLogos synthetic fixture"
+year = 2080
+original_year = 2080
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "speculative prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/speculative/synthetic_speculative_01.txt"
+sha256 = "d1b4caaea6dc085bd973294f727015dd0611db0261218fdd8a10f51deef9ef07"
+
+[[documents]]
+id = "speculative_02"
+group = "speculative"
+label = "Speculative synthetic corpus"
+period = "Synthetic speculative-like"
+work = "Synthetic Future Dialogue II"
+author = "SemanticLogos synthetic fixture"
+year = 2090
+original_year = 2090
+language = "en"
+original_language = "en"
+translator = ""
+edition = "Synthetic fixture v1"
+genre = "speculative prose"
+source = "generated for tests and demonstration"
+license = "MIT; synthetic fixture generated for this repository"
+path = "data/raw/speculative/synthetic_speculative_02.txt"
+sha256 = "c9786f5b06da7ed2c7d66f3de3b4341c21c28a59c07b7e3b03eeb6013978fcf4"

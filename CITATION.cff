@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use SemanticLogos.jl in research, please cite the repository release you used."
+title: "SemanticLogos.jl"
+type: software
+authors:
+  - name: "SemanticLogos contributors"
+version: "0.1.0"
+date-released: "2026-09-06"
+license: MIT
+abstract: "Reproducible Julia toolkit for lexical, conceptual, contextual, and diachronic semantic analysis of text corpora."
+keywords:
+  - natural-language-processing
+  - digital-humanities
+  - semantic-change
+  - computational-humanities
+  - julia

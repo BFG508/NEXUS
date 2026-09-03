@@ -1,0 +1,29 @@
+[scores]
+care = 0.8
+caring = 0.8
+compassion = 0.9
+mercy = 0.7
+kindness = 0.9
+justice = 0.6
+fair = 0.6
+fairness = 0.7
+freedom = 0.6
+hope = 0.8
+peace = 0.8
+trust = 0.6
+wisdom = 0.6
+responsibility = 0.3
+duty = 0.2
+obligation = 0.0
+suffering = -0.8
+fear = -0.7
+cruelty = -1.0
+violence = -0.9
+harm = -0.8
+loss = -0.7
+despair = -0.9
+conflict = -0.4
+burden = -0.5
+
+[negations]
+terms = ["not", "never", "no", "without", "hardly"]
