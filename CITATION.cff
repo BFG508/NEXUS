@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use ETHOS.jl in research, please cite the repository release you used."
+title: "ETHOS.jl: Evolution of Textual Humanism, Ontology and Semantics"
+type: software
+authors:
+  - name: "ETHOS contributors"
+version: "0.1.1"
+date-released: "2026-09-06"
+license: MIT
+abstract: "Reproducible Julia toolkit for lexical, conceptual, contextual, and diachronic semantic analysis of text corpora."
+keywords:
+  - natural-language-processing
+  - digital-humanities
+  - semantic-change
+  - computational-humanities
+  - julia
