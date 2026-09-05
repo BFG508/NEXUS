@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Julia ${{ matrix.julia-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        julia-version: ['1.10', '1.12']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repository structure
+        run: |
+          test -f test/runtests.jl
+          test ! -d tests
+          git diff --check
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ matrix.julia-version }}
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+      - name: Validate synthetic corpus
+        run: julia --project=. scripts/validate_corpus.jl
+      - name: Smoke-test pipeline
+        run: julia --project=. -e 'using ETHOS; mktempdir() do d; ETHOS.run_pipeline("config/pipeline_test.toml"; results_dir_override=d); end'
