@@ -1,0 +1,109 @@
+# NEXUS monorepo ignore rules
+# Source code, documentation, figures used by documentation, small fixtures,
+# configuration, and reproducibility metadata should remain versioned.
+
+# Local / release-only assets
+_release_assets/
+_local_assets/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+**/.ipynb_checkpoints/
+
+# Julia
+Manifest.toml
+.julia/
+*.ji
+*.so
+*.dylib
+*.dll
+
+# R
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+renv/library/
+renv/staging/
+
+# JVM / Scala
+.bsp/
+.bloop/
+.metals/
+.scala-build/
+target/
+project/target/
+*.class
+SCALE/*.txt
+SCALE/*.log
+
+# MATLAB
+*.asv
+*.m~
+*.mat
+slprj/
+codegen/
+
+# COBOL / native binaries
+*.o
+*.obj
+*.exe
+*.out
+SPARTAN/spartan_core
+SPARTAN/spartan_audit_tool
+SPARTAN/spartan_import_tool
+SPARTAN/spartan_snapshot_tool
+SPARTAN/spartan_tactical.dat*
+
+# Generated results / exports
+**/exports/
+**/results/*
+!**/results/.gitkeep
+
+# BEAM generated integration products
+BEAM/integrations/steering_schedule.json
+BEAM/integrations/jamming_profile.json
+BEAM/integrations/seti_report.json
+
+# GAIA downloaded/generated data and integration products
+GAIA/data/raw/nasa_exoplanets.csv
+GAIA/data/raw/astra_payload.csv
+GAIA/data/raw/drake_monte_carlo.csv
+GAIA/integrations/*.csv
+
+# LEVI generated integration products
+LEVI/integrations/*.csv
+LEVI/integrations/*.json
+
+# SCALE generated integration products
+SCALE/integrations/*.json
+SCALE/integrations/*.csv
+
+# SPARTAN generated runtime data and integration products
+SPARTAN/spartan_init.txt
+SPARTAN/spartan_import.txt
+SPARTAN/spartan_snapshot.txt
+SPARTAN/spartan_audit_report.txt
+SPARTAN/integrations/*.json
+
+# Locally built release archives
+_release_assets/built/
+GAIA/renv/local/
+GAIA/renv/cellar/
+GAIA/renv/lock/
+GAIA/renv/python/
+GAIA/renv/sandbox/

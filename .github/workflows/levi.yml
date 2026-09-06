@@ -1,0 +1,15 @@
+name: LEVI CI
+on:
+  push:
+    paths: ['LEVI/**', '.github/workflows/levi.yml']
+  pull_request:
+    paths: ['LEVI/**', '.github/workflows/levi.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: matlab-actions/setup-matlab@v3
+      - uses: matlab-actions/run-command@v3
+        with:
+          command: addpath('LEVI/func'); results = runtests('LEVI/tests'); assertSuccess(results)

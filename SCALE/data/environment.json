@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Nominal",
+    "transitions": {
+      "Turbulence": 85,
+      "Solar_Flare": 98
+    }
+  },
+  {
+    "name": "Turbulence",
+    "transitions": {
+      "Nominal": 40
+    }
+  }
+]

@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Build per-project GitHub release ZIPs without adding them to Git.
+
+EDEN v0.1.0/v0.2.0 are language-only English editions of the preserved
+historical release trees. Current projects are packaged from their source
+folders, and the repository-level MIT LICENSE is copied into each standalone
+release archive.
+"""
+from __future__ import annotations
+
+import argparse
+import shutil
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = ROOT / "_release_assets" / "built"
+PROJECTS = ("ASTRA", "BEAM", "EDEN", "GAIA", "LEVI", "SCALE", "SPARTAN")
+SKIP_PARTS = {
+    ".git", ".venv", "__pycache__", ".pytest_cache", "target", ".metals",
+    ".bsp", ".scala-build", ".Rproj.user", "library", "staging", "exports",
+}
+SKIP_NAMES = {
+    "spartan_init.txt", "spartan_import.txt", "spartan_snapshot.txt",
+    "spartan_tactical.dat", "steering_schedule.json", "jamming_profile.json",
+    "combat_log.json", "nasa_exoplanets.csv",
+}
+
+
+def version_of(project: str) -> str:
+    text = (ROOT / project / "VERSION").read_text(encoding="utf-8").strip()
+    if not text:
+        raise ValueError(f"Empty VERSION for {project}")
+    return text
+
+
+def should_skip(path: Path, project_dir: Path) -> bool:
+    rel = path.relative_to(project_dir)
+    if any(part in SKIP_PARTS for part in rel.parts):
+        return True
+    if path.name in SKIP_NAMES:
+        return True
+    if path.suffix in {".pyc", ".class", ".o", ".obj"}:
+        return True
+    if "results" in rel.parts and path.name != ".gitkeep":
+        return True
+    return False
+
+
+def build_current(project: str) -> Path:
+    version = version_of(project)
+    source = ROOT / project
+    output = OUTPUT / f"{project}-v{version}.zip"
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    prefix = f"{project}-v{version}"
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for path in sorted(source.rglob("*")):
+            if not path.is_file() or should_skip(path, source):
+                continue
+            archive.write(path, Path(prefix) / path.relative_to(source))
+        archive.write(ROOT / "LICENSE", Path(prefix) / "LICENSE")
+    return output
+
+
+def build_eden_historical(version: str) -> Path:
+    mapping = {
+        "0.1.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.1.0-Stable-Prototype.zip",
+        "0.2.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.2.0-Research-Prototype.zip",
+    }
+    source = mapping[version]
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    output = OUTPUT / source.name
+    shutil.copy2(source, output)
+    return output
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("project", choices=[*PROJECTS, "all"])
+    parser.add_argument("--eden-historical", choices=["0.1.0", "0.2.0"])
+    args = parser.parse_args()
+
+    if args.project == "EDEN" and args.eden_historical:
+        outputs = [build_eden_historical(args.eden_historical)]
+    elif args.project == "all":
+        outputs = [build_current(project) for project in PROJECTS if project != "EDEN"]
+        outputs.extend([build_eden_historical("0.1.0"), build_eden_historical("0.2.0")])
+    elif args.project == "EDEN" and version_of("EDEN") in {"0.1.0", "0.2.0"}:
+        parser.error("EDEN v0.1.0/v0.2.0 are historical release trees; use --eden-historical")
+    else:
+        outputs = [build_current(args.project)]
+
+    for output in outputs:
+        print(output)
+
+
+if __name__ == "__main__":
+    main()

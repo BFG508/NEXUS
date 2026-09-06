@@ -1,0 +1,9 @@
+[
+  {
+    "name": "starfighter",
+    "attributes": {
+      "evasion": "1d20+8",
+      "laser_cannon": "4d8!"
+    }
+  }
+]

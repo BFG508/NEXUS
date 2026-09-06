@@ -1,0 +1,26 @@
+name: SPARTAN CI
+on:
+  push:
+    paths: ['SPARTAN/**', '.github/workflows/spartan.yml']
+  pull_request:
+    paths: ['SPARTAN/**', '.github/workflows/spartan.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install pytest
+      - working-directory: SPARTAN
+        run: pytest -q
+      - name: Compile GnuCOBOL sources
+        working-directory: SPARTAN
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnucobol
+          cobc -x -free -o spartan_core spartan_core.cbl
+          cobc -x -free -o spartan_audit_tool spartan_audit_tool.cbl
+          cobc -x -free -o spartan_import_tool spartan_import_tool.cbl
+          cobc -x -free -o spartan_snapshot_tool spartan_snapshot_tool.cbl
