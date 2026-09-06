@@ -1,0 +1,30 @@
+# Julia
+Manifest.toml
+*.ji
+
+# Generated analysis outputs
+results/tables/*.csv
+results/figures/*.svg
+results/embeddings/*.csv
+results/report.md
+results/run_metadata.toml
+
+# Local corpora: keep manifests and synthetic examples, ignore user-added raw data
+/data/raw/*
+!/data/raw/README.md
+!/data/raw/ancient/
+!/data/raw/enlightenment/
+!/data/raw/speculative/
+!/data/raw/ancient/synthetic_ancient_*.txt
+!/data/raw/enlightenment/synthetic_enlightenment_*.txt
+!/data/raw/speculative/synthetic_speculative_*.txt
+
+# Processed/intermediate data
+/data/processed/*
+!/data/processed/.gitkeep
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+*~
