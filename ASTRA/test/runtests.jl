@@ -8,7 +8,7 @@ using astra
     @test sol.mass_solar == 1.0
     @test sol.luminosity_solar ≈ 1.0 atol=1e-12
     @test sol.radius_solar ≈ 1.0 atol=1e-12
-    @test sol.spectral_class == G_CLASS
+    @test sol.spectral_class == astra.G_CLASS
 
     @test_throws ArgumentError generate_star(mass_solar=0.01)
     @test_throws ArgumentError generate_star(mass_solar=151.0)
