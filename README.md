@@ -85,11 +85,11 @@ See `docs/ARCHITECTURE.md` and `integration/README.md` for the interface rules.
 ETHOS history is preserved as:
 
 ```text
-SemanticLogos.jl v0.1.0  historical precursor
-ETHOS.jl         v0.1.1  rebrand baseline
-ETHOS.jl         v0.2.0  correctness/reproducibility baseline
-ETHOS.jl         v1.0.0  first stable API baseline
-ETHOS.jl         v1.1.0  current NEXUS development release
+ETHOS v0.1.0  historical baseline
+ETHOS v0.1.1  metadata/identity consolidation
+ETHOS v0.2.0  correctness/reproducibility baseline
+ETHOS v1.0.0  first stable API baseline
+ETHOS v1.1.0  current NEXUS development release
 ```
 
 ETHOS v1.1.0 strengthens the stable baseline with rank-safe and frequency-stable Procrustes anchors, explicit comparison pairs, cross-language guards, portable configuration roots, moving-block bootstrap, minimum valid-bootstrap thresholds, shared bootstrap embeddings across concepts, stricter metadata validation, and higher-precision/provenance exports.
@@ -240,23 +240,23 @@ A green repository/integration workflow does not replace each project's scientif
 
 ## Release model
 
-Current and historical tag lines include:
+The canonical release chronology, from oldest to newest, is:
 
 ```text
-astra-v0.1.0
 beam-v0.1.0
+levi-v0.1.0
+spartan-v0.1.0
+gaia-v0.1.0
+scale-v0.1.0
+astra-v0.1.0
 eden-v0.1.0
 eden-v0.2.0
-eden-v0.3.0
-semanticlogos-v0.1.0
+ethos-v0.1.0
 ethos-v0.1.1
 ethos-v0.2.0
 ethos-v1.0.0
+eden-v0.3.0
 ethos-v1.1.0
-gaia-v0.1.0
-levi-v0.1.0
-scale-v0.1.0
-spartan-v0.1.0
 ```
 
 Build and validate all standalone release assets with:

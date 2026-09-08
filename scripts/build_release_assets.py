@@ -28,11 +28,11 @@ SKIP_NAMES = {
 }
 
 EDEN_HISTORY = {
-    "0.1.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.1.0-Stable-Prototype.zip",
-    "0.2.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.2.0-Research-Prototype.zip",
+    "0.1.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.1.0.zip",
+    "0.2.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.2.0.zip",
 }
 ETHOS_HISTORY = {
-    "semanticlogos-0.1.0": ROOT / "_release_assets" / "ETHOS" / "SemanticLogos-v0.1.0.zip",
+    "0.1.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.1.0.zip",
     "0.1.1": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.1.1.zip",
     "0.2.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.2.0.zip",
     "1.0.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v1.0.0.zip",
