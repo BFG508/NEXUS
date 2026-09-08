@@ -12,6 +12,7 @@ include("environment.jl")
 include("evolution.jl")
 include("biology.jl")
 include("metrics.jl")
+include("uncertainty.jl")
 include("theory.jl")
 include("simulation.jl")
 include("experiments.jl")
@@ -43,10 +44,13 @@ export Action,
        run_simulation,
        run_ensemble,
        summarize_ensemble,
+       mean_confidence_interval,
+       wilson_interval,
        run_invasion_experiment,
        summarize_invasions,
        invasibility_matrix,
        empirical_ess_candidates,
+       empirical_ess_diagnostics,
        collect_metrics,
        strategy_action,
        cooperation_probability,
@@ -58,6 +62,7 @@ export Action,
        replicator_step,
        simulate_replicator,
        validate_binary_abm_against_replicator,
+       validate_abm_replicator_convergence,
        replace_parameters
 
 end

@@ -48,20 +48,9 @@ The cultural layer is a synthetic inference engine, not an empirical sociology m
 
 ## NEXUS integration
 
-ASTRA currently acts as a producer for several compatibility adapters:
+ASTRA owns stellar-system generation only. The standalone project release contains no NEXUS adapter code. Repository-level adapters under `../integration/` can execute ASTRA and export `nexus.stellar_system.v1`, which is consumed by GAIA/LEVI translators without modifying ASTRA internals.
 
-- **GAIA:** exports generated planets to `GAIA/data/raw/astra_payload.csv` for GAIA's ETL pipeline. Missing observational fields, such as catalog distance, are left unavailable rather than synthesized.
-- **SCALE:** exports civilization-derived numeric attributes to `SCALE/data/astra_entities.json`; only values that SCALE v0.1.0 can interpret as rollable numeric attributes are emitted.
-- **SPARTAN:** queues advanced generated civilizations as fixed-width aerospace asset records in `SPARTAN/spartan_import.txt` for explicit import into the SPARTAN indexed database.
-- **LEVI:** exports planetary orbital elements to `LEVI/integrations/astra_orbits.csv` for MATLAB transfer studies.
-
-Run the export path with:
-
-```bash
-julia --project=. scripts/generate_sector.jl 10 --seed 42 --export
-```
-
-These adapters are compatibility interfaces, not a stable NEXUS cross-project API.
+This separation is deliberate: ASTRA remains independently executable, while versioned NEXUS contracts define cross-project compatibility.
 
 ## Reproducibility
 
@@ -97,7 +86,6 @@ ASTRA/
 ├── scripts/
 │   └── generate_sector.jl        Seeded sector-generation entry point
 ├── src/
-│   ├── integrations/             NEXUS compatibility exporters
 │   ├── astra.jl                  Main module/public surface
 │   ├── stars.jl                  Stellar generation/classification
 │   ├── planets.jl                Planetary generation/thermodynamics
@@ -118,12 +106,6 @@ Generate ten systems:
 ```bash
 cd ASTRA
 julia --project=. scripts/generate_sector.jl 10 --seed 42
-```
-
-Generate and export NEXUS compatibility payloads:
-
-```bash
-julia --project=. scripts/generate_sector.jl 10 --seed 42 --export
 ```
 
 Explore the visualization/demo script with:
@@ -148,5 +130,5 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 - Habitable-zone boundaries use a simple luminosity square-root scaling.
 - Planetary greenhouse heating, tidal locking, geology, atmosphere, and resource states use simplified heuristic models.
 - Civilization attributes are speculative generated state, not empirical sociological predictions.
-- Cross-project exporters map ASTRA state into the current consumer format and are not yet stable versioned interfaces.
+- NEXUS adapters are external to ASTRA and consume the documented ASTRA core/API rather than shipping inside the project.
 - ASTRA is an exploratory simulation/worldbuilding framework, not an astrophysical or astrobiological qualification tool.

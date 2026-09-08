@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/eden_initialization.v1.schema.json",
+  "title": "nexus.eden_initialization.v1",
+  "description": "Explicit scenario mapping into EDEN initial conditions; mapping policy provenance is mandatory.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.eden_initialization.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "population_size",
+        "initial_doctrine_fractions",
+        "genome_centers",
+        "mapping_policy"
+      ],
+      "properties": {
+        "population_size": {
+          "type": "integer"
+        },
+        "initial_doctrine_fractions": {
+          "type": "object"
+        },
+        "genome_centers": {
+          "type": "object"
+        },
+        "mapping_policy": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

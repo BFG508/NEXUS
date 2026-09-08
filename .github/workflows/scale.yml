@@ -17,9 +17,3 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - working-directory: SCALE
         run: sbt test
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.13'
-      - run: python -m pip install pytest
-      - working-directory: SCALE
-        run: python -m pytest -q integrations/test_beamJammingSim.py

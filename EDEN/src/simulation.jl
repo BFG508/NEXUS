@@ -77,7 +77,7 @@ function run_ensemble(
     return isempty(outputs) ? DataFrame() : vcat(outputs...)
 end
 
-"""Summarize ensemble uncertainty by generation using normal-approximation confidence intervals."""
+"""Summarize ensemble uncertainty by generation using Student-t or bootstrap intervals."""
 function summarize_ensemble(
     data::DataFrame;
     metrics = (
@@ -89,34 +89,43 @@ function summarize_ensemble(
         :mean_energy,
         :population_size,
     ),
-    z::Float64 = 1.96,
+    confidence_method::Symbol = :student_t,
+    confidence_level::Float64 = 0.95,
+    bootstrap_replicates::Int = 2_000,
+    seed::Int = 20260906,
 )
     :generation in propertynames(data) || throw(ArgumentError("data must contain a generation column."))
     generations = sort(unique(data.generation))
     out = DataFrame(generation = generations)
     out.replicates = [count(==(g), data.generation) for g in generations]
 
-    for metric in metrics
+    for (metric_index, metric) in enumerate(metrics)
         metric in propertynames(data) || throw(ArgumentError("Missing metric column: $(metric)."))
         means = Float64[]
         stds = Float64[]
         lowers = Float64[]
         uppers = Float64[]
-        for g in generations
+        for (generation_index, g) in enumerate(generations)
             values = Float64.(data[data.generation .== g, metric])
-            n = length(values)
-            mu = mean(values)
-            sigma = n > 1 ? std(values) : 0.0
-            se = n > 0 ? sigma / sqrt(n) : 0.0
-            push!(means, mu)
-            push!(stds, sigma)
-            push!(lowers, mu - z * se)
-            push!(uppers, mu + z * se)
+            interval = mean_confidence_interval(
+                values;
+                method = confidence_method,
+                confidence_level = confidence_level,
+                bootstrap_replicates = bootstrap_replicates,
+                seed = seed + 10_000 * metric_index + generation_index,
+            )
+            push!(means, interval.mean)
+            push!(stds, interval.standard_deviation)
+            push!(lowers, interval.lower)
+            push!(uppers, interval.upper)
         end
         out[!, Symbol(metric, :_mean)] = means
         out[!, Symbol(metric, :_std)] = stds
-        out[!, Symbol(metric, :_ci95_low)] = lowers
-        out[!, Symbol(metric, :_ci95_high)] = uppers
+        # Keep the historical ci95 names for the default 95 % level.
+        suffix_low = confidence_level == 0.95 ? :_ci95_low : :_ci_low
+        suffix_high = confidence_level == 0.95 ? :_ci95_high : :_ci_high
+        out[!, Symbol(metric, suffix_low)] = lowers
+        out[!, Symbol(metric, suffix_high)] = uppers
     end
     return out
 end

@@ -1,0 +1,12 @@
+{
+  "schema": "nexus.stellar_system.v1",
+  "producer": {"project": "ASTRA", "version": "0.1.0"},
+  "payload": {
+    "system_id": "fixture-system",
+    "star": {"name": "Fixture", "mass_solar": 1.0, "radius_solar": 1.0, "temperature_k": 5772.0},
+    "planets": [
+      {"id": "fixture-b", "radius_earth": 1.0, "mass_earth": 1.0, "equilibrium_temp_k": 255.0, "semimajor_axis_au": 1.0, "eccentricity": 0.0167, "orbital_period_days": 365.25},
+      {"id": "fixture-c", "radius_earth": 1.4, "mass_earth": 2.3, "equilibrium_temp_k": 230.0, "semimajor_axis_au": 1.55, "eccentricity": 0.05, "orbital_period_days": 705.0}
+    ]
+  }
+}

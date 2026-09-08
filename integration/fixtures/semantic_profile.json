@@ -1,0 +1,12 @@
+{
+  "schema": "nexus.semantic_culture_profile.v1",
+  "producer": {"project": "ETHOS", "version": "1.1.0"},
+  "payload": {
+    "analysis_language": "en",
+    "comparison": {"reference": "ancient", "target": "enlightenment"},
+    "concepts": [
+      {"id": "compassion", "label": "Compassion", "semantic_shift": 0.18, "bootstrap_sufficient": true, "valence_reference": 0.10, "valence_target": 0.25},
+      {"id": "duty", "label": "Duty", "semantic_shift": 0.08, "bootstrap_sufficient": true, "valence_reference": 0.15, "valence_target": 0.12}
+    ]
+  }
+}

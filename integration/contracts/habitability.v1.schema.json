@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/habitability.v1.schema.json",
+  "title": "nexus.habitability.v1",
+  "description": "Planetary habitability/proxy outputs associated with a stellar system.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.habitability.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "system_id",
+        "targets"
+      ],
+      "properties": {
+        "system_id": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

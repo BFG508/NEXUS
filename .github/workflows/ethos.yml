@@ -1,0 +1,19 @@
+name: ETHOS CI
+on:
+  push:
+    paths: ['ETHOS/**', '.github/workflows/ethos.yml']
+  pull_request:
+    paths: ['ETHOS/**', '.github/workflows/ethos.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.10'
+      - uses: julia-actions/cache@v2
+      - name: Package tests
+        run: julia --project=ETHOS -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
+      - name: Synthetic pipeline smoke test
+        run: julia --project=ETHOS ETHOS/scripts/run_pipeline.jl ETHOS/config/pipeline_test.toml

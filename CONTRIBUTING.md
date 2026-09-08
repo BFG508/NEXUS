@@ -26,7 +26,6 @@ EDEN has additional scientific/software constraints:
 - preserve deterministic reproducibility for fixed seeds;
 - avoid unbounded per-agent data structures in hot paths unless scientifically required;
 - distinguish empirical invasion resistance from a formal ESS proof;
-- do not introduce narrative examples that depend on spoilers from books, films, series, or games.
 
 Recommended EDEN local workflow:
 
@@ -38,3 +37,9 @@ julia --project=. scripts/run_theory_validation.jl
 ```
 
 For EDEN pull requests, state the scientific hypothesis or software issue, parameters and seeds used for validation, and whether the change modifies model semantics or only implementation details.
+
+## ETHOS development
+
+ETHOS changes must preserve corpus/document boundaries, explicit provenance, deterministic seeds, and the distinction between descriptive semantic measurements and historical/causal interpretation. Alignment changes require tests for rank/anchor behavior; bootstrap changes must report valid replicate support and must not suppress unexpected errors. Cross-language semantic comparison requires an explicitly cross-lingual backend rather than bypassing the monolingual guard.
+
+Repository-level NEXUS adapters belong under `integration/`; do not add NEXUS-specific adapter code inside `ETHOS/` or any other standalone project directory.

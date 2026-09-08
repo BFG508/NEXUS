@@ -45,27 +45,9 @@ The implementation is PI, not PID: there is no derivative term in the current co
 
 ## NEXUS integration
 
-### SPARTAN combat compatibility adapter
+SCALE owns stochastic dice/state-transition behavior. NEXUS represents downstream stochastic outcomes with `nexus.stochastic_event.v1`; repository-level adapters apply those events to other domain states. The standalone SCALE release contains no BEAM/SPARTAN integration scripts and no reimplementation of sibling models.
 
-```bash
-python integrations/spartanCombatSim.py
-```
-
-The adapter reads the latest SPARTAN snapshot/bootstrap state, evaluates stochastic combat events, and queues fixed-width updates in `SPARTAN/spartan_import.txt`. The live indexed database is updated only when SPARTAN's explicit import tool is run.
-
-### BEAM jamming profile
-
-```bash
-python integrations/beamJammingSim.py
-```
-
-The adapter generates a JSON jamming profile consumed by BEAM. Sidelobe estimates are taken from local maxima outside the main-lobe region rather than from the immediately adjacent angular sample.
-
-### ASTRA entity input
-
-ASTRA can generate `data/astra_entities.json`. SCALE v0.1.0 treats loaded entity attributes as rollable expressions, so the compatibility exporter limits its payload to values compatible with that interpretation.
-
-These adapters are not a stable NEXUS protocol.
+A NEXUS stochastic-event payload is an interchange record, not a claim that every SCALE roll has a direct physical interpretation.
 
 ## Reproducibility
 
@@ -89,8 +71,6 @@ cd SCALE
 sbt test
 ```
 
-Python 3 plus `pytest` is also required to run the BEAM-jamming integration regression.
-
 ## Repository structure
 
 ```text
@@ -99,10 +79,6 @@ SCALE/
 │   ├── astra_entities.json        ASTRA compatibility payload
 │   ├── entities.json              Entity fixture
 │   └── environment.json           Markov environment fixture
-├── integrations/
-│   ├── beamJammingSim.py          BEAM jamming-profile generator
-│   ├── spartanCombatSim.py        SPARTAN combat adapter
-│   └── test_beamJammingSim.py     Python integration regression
 ├── src/
 │   ├── main/scala/
 │   │   ├── DiceEngine.scala
@@ -144,14 +120,12 @@ Run the Scala and Python tests with:
 
 ```bash
 sbt test
-python -m pytest -q integrations/test_beamJammingSim.py
 ```
 
 ## Tests and CI
 
 `src/test/scala/DiceEngineTest.scala` is a ScalaTest suite covering parser/evaluator behavior, keep-high logic, invalid dice, bounded entropy fusion, and the PI controller.
 
-`integrations/test_beamJammingSim.py` exercises the BEAM-jamming compatibility calculation.
 
 `.github/workflows/scale.yml` configures JDK 17/sbt, runs Scala tests, then configures Python and runs the integration regression.
 

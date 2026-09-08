@@ -13,3 +13,15 @@
     @test all(abs.(sum(history; dims = 2) .- 1.0) .< 1e-10)
     @test_throws ArgumentError replicator_rhs([-1.0, 2.0], matrix)
 end
+
+@testset "ABM-replicator convergence study API" begin
+    study = validate_abm_replicator_convergence(
+        PrisonersDilemma();
+        population_sizes = (40,),
+        selection_intensities = (0.1,),
+        generations = 1,
+        seeds = 1:2,
+    )
+    @test nrow(study) == 1
+    @test :direction_consistent in propertynames(study)
+end

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/tactical_state.v1.schema.json",
+  "title": "nexus.tactical_state.v1",
+  "description": "A normalized view of SPARTAN operational assets.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.tactical_state.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "assets"
+      ],
+      "properties": {
+        "assets": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

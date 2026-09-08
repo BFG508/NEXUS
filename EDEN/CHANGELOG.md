@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.0 — NEXUS Integration & Inference Release
+
+- Replaced insertion/FIFO-like bounded opponent memory with true least-recently-used behavior.
+- Added Student-t and bootstrap confidence intervals for ensemble means.
+- Added Wilson intervals for invasion frequency-growth probability.
+- Added initial/final invader counts plus separate frequency and absolute growth metrics while retaining `grew` as the frequency-growth compatibility field.
+- Strengthened empirical ESS diagnostics with complete resident×invader coverage checks and confidence-bound-aware classification.
+- Added controlled ABM-to-replicator convergence studies over population size and selection intensity.
+- Added a generic TOML-driven runner for reproducible externally configured scenarios.
+- Added repository-level NEXUS contracts/adapters without placing integration code inside the standalone EDEN release.
+- Updated model, validation, tests, and presentation for v0.3.0.
+
 ## v0.2.0 — Research Prototype
 
 - Added a continuous ethical genome separated from the doctrine tag.

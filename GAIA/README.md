@@ -42,27 +42,9 @@ These atmospheres are simulated scenario state. A positive flag is not an observ
 
 ## NEXUS integration
 
-### ASTRA input
+GAIA remains a standalone R/Shiny analysis project. Repository-level adapters under `../integration/` translate `nexus.stellar_system.v1` into the documented GAIA ETL columns and export GAIA habitability calculations as `nexus.habitability.v1`.
 
-ASTRA can generate `data/raw/astra_payload.csv`. Process it explicitly with:
-
-```bash
-Rscript scripts/process_data.R --input=data/raw/astra_payload.csv
-```
-
-ASTRA does not fabricate catalog distance, so GAIA outputs that depend on distance may remain unavailable for generated rows.
-
-### SCALE-style Drake Monte Carlo proxy
-
-```bash
-Rscript integrations/scale_drake_simulator.R
-```
-
-This adapter runs a deterministic-seed local Monte Carlo compatibility proxy around Drake-equation parameters. It does **not** invoke the Scala SCALE engine and should not be described as SCALE execution.
-
-### SPARTAN/BEAM consumers
-
-Other projects can consume GAIA's processed exoplanet state through their own adapters. Those integrations must preserve missing observational fields rather than inventing data required by the downstream analysis.
+No integration code is shipped in the GAIA release. Cross-project transformations live at the monorepo boundary and must not silently change GAIA's scientific definitions.
 
 ## Reproducibility and data policy
 
@@ -105,8 +87,6 @@ GAIA/
 ├── data/
 │   ├── raw/                       Small source fixtures/lookups
 │   └── processed/                 Processed test/dashboard fixture
-├── integrations/
-│   └── scale_drake_simulator.R    Local SCALE-style compatibility proxy
 ├── scripts/
 │   ├── fetch_data.R               NASA source downloader
 │   └── process_data.R             ETL pipeline

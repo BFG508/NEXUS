@@ -1,0 +1,24 @@
+{
+  "policy_id": "nexus.ethos_to_eden.example.v1",
+  "description": "Explicit demonstration mapping. It is a scenario choice, not an empirical identification of EDEN traits from language.",
+  "baseline_doctrine_fractions": {
+    "Egoist": 0.25,
+    "Altruist": 0.25,
+    "Utilitarian": 0.25,
+    "StrictReciprocal": 0.25
+  },
+  "concept_weights": {
+    "compassion": {
+      "Altruist": 0.12,
+      "Utilitarian": 0.08,
+      "Egoist": -0.08
+    },
+    "duty": {
+      "StrictReciprocal": 0.10,
+      "Utilitarian": 0.06
+    },
+    "soul": {},
+    "existence": {}
+  },
+  "maximum_fraction_adjustment": 0.15
+}

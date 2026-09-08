@@ -1,35 +1,52 @@
-# EDEN v0.2 scientific model
+# EDEN model
 
-EDEN separates six levels: game, decision policy, continuous genome, doctrine, evolutionary mechanism, and environment.
+EDEN v0.3.0 is an agent-based evolutionary-game model built around repeated Prisoner's Dilemma interactions. Each agent has an energy state, a doctrine tag, a continuous ethical genome, bounded opponent memory, and demographic metadata.
 
-## Game
+## Interaction state
 
-The Prisoner's Dilemma uses `T > R > P > S`. Payoff is game utility and is not identified with energy.
+The four doctrine tags are `Egoist`, `Altruist`, `Utilitarian`, and `StrictReciprocal`. A continuous `EthicalGenome` stores four normalized traits:
 
-## Genome and doctrine
+```text
+base_cooperation
+reciprocity
+other_regard
+forgiveness
+```
 
-`EthicalGenome` contains four normalized parameters: baseline cooperation, reciprocity, regard for others' welfare, and forgiveness. `doctrine_tag` selects a policy family; the genome parameterizes that policy.
-
-## Energy
-
-Per interaction, `ΔE = payoff_to_energy * payoff - metabolic_cost`. In biological and hybrid modes, energy can trigger death and reproduction.
-
-## Cultural evolution
-
-Imitation uses the Fermi rule. Updating may be asynchronous or synchronous.
-
-## Biological evolution
-
-Agents with energy less than or equal to the death threshold are removed. Agents above the reproduction threshold may produce offspring up to the carrying capacity. Offspring inherit doctrine and genome, subject to mutation.
-
-## Hybrid evolution
-
-Applies cultural evolution first and biological turnover second in each generation.
+The doctrine tag constrains admissible genome regions but does not replace the continuous traits.
 
 ## Memory
 
-Memory is bounded by `memory_capacity`. Each agent retains the most recent actions of a limited number of opponents, avoiding the O(N²) scaling of v0.1.
+Opponent memory is bounded LRU state. Remembered opponents are ordered from least to most recently used. A repeated observation updates the stored action and moves that opponent to the most-recent position; a new observation at full capacity evicts the oldest entry.
 
-## ESS
+## Evolution
 
-Resident–invader experiments generate empirical probabilities of growth/fixation. `empirical_ess_candidates` is an experimental screening procedure, not a mathematical demonstration of evolutionary stability.
+Cultural evolution uses fitness-dependent imitation. Biological evolution applies mortality and reproduction through the configured energy thresholds, reproduction probability, carrying capacity, inheritance, and mutation. Hybrid evolution enables both mechanisms.
+
+## Demography and energy
+
+Game payoff can be converted into energy through `payoff_to_energy` and reduced by `metabolic_cost`. Energy then participates in biological turnover. This energy is a model resource and should not be interpreted as utility, welfare, or biological fitness outside the configured rules.
+
+## Spatial mode
+
+Well-mixed populations sample partners globally. Spatial populations use a periodic 2-D grid and local neighborhoods, with optional random movement.
+
+## Invasion measurements
+
+An invasion experiment records the resident/invader setup and separates two notions of growth:
+
+\[
+\Delta f = f_{final}-f_{initial}
+\]
+
+and
+
+\[
+\Delta N = N_{final}-N_{initial}.
+\]
+
+Frequency growth is the compatibility meaning of `grew`; absolute growth is stored separately as `grew_absolute`.
+
+## Replicator reference
+
+The replicator implementation is a reduced mean-field reference using a payoff matrix. The full EDEN ABM contains memory, stochastic finite populations, continuous traits, optional demography, mutation, and spatial structure that are not all represented by the reduced replicator equation.

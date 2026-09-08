@@ -1,30 +1,57 @@
-# NEXUS architecture baseline
+# NEXUS architecture
 
-Each NEXUS project owns its domain logic and must remain executable without importing another project's source tree. Cross-project communication should converge on explicit, versioned interchange schemas rather than direct dependencies on sibling implementation details.
+NEXUS is a monorepo of independently executable projects connected through a repository-level integration layer. Domain implementations do not import sibling source trees and project releases do not contain cross-project adapters.
 
-Current domain boundaries are:
+## Domain ownership
 
-- **ASTRA:** stellar systems, planets, geology proxies, and civilization initial conditions;
-- **GAIA:** planetary environment, habitability, and astrobiology proxies;
-- **EDEN:** social, ethical, and evolutionary dynamics;
-- **SCALE:** stochastic events and probabilistic state transitions;
-- **SPARTAN:** tactical assets and persistent operational state;
-- **BEAM:** communications, antenna arrays, steering, and interference studies;
-- **LEVI:** orbital mechanics, transfers, and trajectory analysis.
+- **ASTRA:** stellar systems, planets, geology proxies, and civilization initial conditions.
+- **GAIA:** exoplanet data processing, habitability, and astrobiology proxies.
+- **ETHOS:** corpus provenance, lexical/concept analysis, distributional semantics, and semantic-shift uncertainty.
+- **EDEN:** agent-based ethical/social dynamics, evolutionary game experiments, and invasion diagnostics.
+- **SCALE:** stochastic dice/state-transition behavior and entropy/controller experiments.
+- **SPARTAN:** tactical asset persistence and fixed-width operational state.
+- **BEAM:** ideal phased-array steering and array-factor calculations.
+- **LEVI:** orbital mechanics, Lambert transfers, and trajectory studies.
 
-## Integration baseline
+## Interface rule
 
-Existing `integrations/` scripts are compatibility adapters. They may currently:
+Cross-project behavior lives under `integration/` and communicates using versioned contracts. An adapter may:
 
-- consume a producer-generated file directly;
-- transform a producer artifact into a consumer-specific format;
-- queue changes through SPARTAN's fixed-width import path; or
-- reproduce a deliberately limited local proxy when the sibling runtime is not invoked.
+1. invoke a producer's documented public/core interface;
+2. translate a producer artifact into a versioned NEXUS contract;
+3. translate a contract into a consumer's documented input format; or
+4. apply an explicit scenario policy whose assumptions are stored with the output.
 
-The README of each project identifies which behavior applies. Compatibility adapters are not a stable public cross-project API.
+An adapter must **not** reimplement a sibling model and present the result as if the sibling had executed.
 
-## Future interchange schemas
+## Versioned contracts
 
-When an integration becomes part of the intended stable NEXUS architecture, its producer/consumer payload should be defined by an explicit versioned schema. Schemas should be introduced only alongside implemented producer and consumer support rather than by reserving an otherwise empty repository directory.
+Current v1 contracts cover stellar systems, habitability, semantic culture profiles, EDEN initialization, society state, stochastic events, tactical state, communication state, and trajectory requests. Schemas are stored in `integration/contracts/`.
 
-A future schema change should version the data contract instead of requiring either project to import or understand the sibling project's internal code layout.
+Schema versioning is independent from project versioning. A project can advance without changing a contract when its emitted/consumed interface remains compatible.
+
+## ETHOS-to-EDEN boundary
+
+ETHOS produces descriptive textual measurements. EDEN consumes simulation parameters. There is no scientifically privileged direct mapping between those domains, so NEXUS requires a separate mapping-policy file. The example policy is deliberately labelled a scenario transform rather than an estimator.
+
+The chain is therefore:
+
+```text
+ETHOS results
+   ↓
+semantic_culture_profile.v1
+   ↓
+explicit mapping policy
+   ↓
+eden_initialization.v1
+   ↓
+generic EDEN TOML runner configuration
+```
+
+This keeps the assumption visible and reproducible.
+
+## Release boundary
+
+`integration/` belongs to NEXUS, not to any standalone project release. Release tooling validates that neither `integration/` nor historical project-local `integrations/` directories appear inside generated project ZIPs.
+
+For public GitHub releases, the replacement script creates isolated synthetic tag commits from the standalone trees so GitHub's automatic source archives are project-only as well.

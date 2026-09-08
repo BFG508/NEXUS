@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/stellar_system.v1.schema.json",
+  "title": "nexus.stellar_system.v1",
+  "description": "A generated stellar system with planetary parameters used by downstream adapters.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.stellar_system.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "system_id",
+        "star",
+        "planets"
+      ],
+      "properties": {
+        "system_id": {
+          "type": "string"
+        },
+        "star": {
+          "type": "object"
+        },
+        "planets": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

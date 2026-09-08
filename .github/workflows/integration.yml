@@ -1,0 +1,43 @@
+name: NEXUS Integration CI
+on:
+  push:
+    paths:
+      - 'integration/**'
+      - 'ASTRA/**'
+      - 'BEAM/**'
+      - 'EDEN/**'
+      - 'ETHOS/**'
+      - 'GAIA/**'
+      - 'LEVI/**'
+      - 'SCALE/**'
+      - 'SPARTAN/**'
+      - '.github/workflows/integration.yml'
+  pull_request:
+    paths:
+      - 'integration/**'
+      - 'ASTRA/**'
+      - 'BEAM/**'
+      - 'EDEN/**'
+      - 'ETHOS/**'
+      - 'GAIA/**'
+      - 'LEVI/**'
+      - 'SCALE/**'
+      - 'SPARTAN/**'
+      - '.github/workflows/integration.yml'
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install pytest
+      - run: python -m pytest -q integration/tests
+      - run: python scripts/repo_preflight.py
+      - name: Build current standalone release assets
+        run: |
+          for project in ASTRA BEAM EDEN ETHOS GAIA LEVI SCALE SPARTAN; do
+            python scripts/build_release_assets.py "$project"
+          done
+      - run: python scripts/check_release_isolation.py

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/semantic_culture_profile.v1.schema.json",
+  "title": "nexus.semantic_culture_profile.v1",
+  "description": "Corpus-derived semantic/cultural measurements without implicit moral interpretation.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.semantic_culture_profile.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "analysis_language",
+        "comparison",
+        "concepts"
+      ],
+      "properties": {
+        "analysis_language": {
+          "type": "string"
+        },
+        "comparison": {
+          "type": "object"
+        },
+        "concepts": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

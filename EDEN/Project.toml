@@ -1,7 +1,7 @@
 name = "EDEN"
 uuid = "b62cdd73-7a53-4ea0-9c4a-71b12e4a8f42"
 authors = ["EDEN contributors"]
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/stochastic_event.v1.schema.json",
+  "title": "nexus.stochastic_event.v1",
+  "description": "A stochastic event/result that can be translated into downstream operational effects.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.stochastic_event.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "event_id",
+        "event_type",
+        "severity",
+        "modifiers"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "number"
+        },
+        "modifiers": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

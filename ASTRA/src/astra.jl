@@ -78,17 +78,9 @@ include("culture_generator.jl")
 include("ui_render.jl")
 
 # ──────────────────────────────────────────────────────────
-#  Integrations
-# ──────────────────────────────────────────────────────────
-include("integrations/scale_exporter.jl")
-include("integrations/gaia_exporter.jl")
-include("integrations/spartan_exporter.jl")
-include("integrations/levi_exporter.jl")
-
-# ──────────────────────────────────────────────────────────
 #  Public API Exports
 # ──────────────────────────────────────────────────────────
 export Star, SpectralClass, Planet, System, Civilization, Geology
-export generate_star, spectral_class, star_summary, generate_system, planet_summary, system_summary, infer_civilization, civilization_summary, generate_geology, geology_summary, plot_system, export_to_scale, export_to_gaia, export_to_spartan, export_to_levi
+export generate_star, spectral_class, star_summary, generate_system, planet_summary, system_summary, infer_civilization, civilization_summary, generate_geology, geology_summary, plot_system
 
 end # module astra

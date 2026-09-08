@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/trajectory_request.v1.schema.json",
+  "title": "nexus.trajectory_request.v1",
+  "description": "A normalized orbital-transfer request for LEVI.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.trajectory_request.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "origin",
+        "target",
+        "constraints"
+      ],
+      "properties": {
+        "origin": {
+          "type": "object"
+        },
+        "target": {
+          "type": "object"
+        },
+        "constraints": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

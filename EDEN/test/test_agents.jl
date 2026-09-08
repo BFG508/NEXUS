@@ -1,4 +1,4 @@
-@testset "Agents and bounded memory" begin
+@testset "Agents and bounded LRU memory" begin
     @test_throws ArgumentError EthicalGenome(1.2, 0.0, 0.0, 0.0)
 
     params = SimulationParameters(
@@ -17,7 +17,11 @@
     remember!(a, 3, Defect)
     @test remembered_action(a, 2) == Cooperate
     @test remembered_action(a, 3) == Defect
+
+    # Updating agent 2 makes it the most-recent entry; agent 3 is evicted next.
+    remember!(a, 2, Defect)
     remember!(a, 4, Cooperate)
-    @test remembered_action(a, 2) === nothing
+    @test remembered_action(a, 2) == Defect
+    @test remembered_action(a, 3) === nothing
     @test remembered_action(a, 4) == Cooperate
 end

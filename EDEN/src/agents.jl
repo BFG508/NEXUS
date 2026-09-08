@@ -102,25 +102,43 @@ function project_genome(doctrine::Doctrine, genome::EthicalGenome)
     return EthicalGenome(clamp(b, 0.0, 1.0), clamp(r, 0.0, 1.0), clamp(o, 0.0, 1.0), clamp(f, 0.0, 1.0))
 end
 
-"""Store the most recent observed action using bounded per-agent memory."""
+"""Store an observed action using bounded least-recently-used (LRU) memory."""
 function remember!(agent, opponent_id::Int, action::Action)
     capacity = length(agent.memory_ids)
     capacity == 0 && return nothing
     code = action == Cooperate ? MEMORY_COOPERATE : MEMORY_DEFECT
+    used = count(!=(0), agent.memory_ids)
+    existing = findfirst(==(opponent_id), agent.memory_ids)
 
-    @inbounds for i in eachindex(agent.memory_ids)
-        if agent.memory_ids[i] == opponent_id
-            agent.memory_actions[i] = code
-            return nothing
+    if existing !== nothing
+        # Move an updated opponent to the most-recent position.
+        @inbounds for index in existing:(used - 1)
+            agent.memory_ids[index] = agent.memory_ids[index + 1]
+            agent.memory_actions[index] = agent.memory_actions[index + 1]
         end
+        @inbounds begin
+            agent.memory_ids[used] = opponent_id
+            agent.memory_actions[used] = code
+        end
+    elseif used < capacity
+        used += 1
+        @inbounds begin
+            agent.memory_ids[used] = opponent_id
+            agent.memory_actions[used] = code
+        end
+    else
+        @inbounds for index in 1:(capacity - 1)
+            agent.memory_ids[index] = agent.memory_ids[index + 1]
+            agent.memory_actions[index] = agent.memory_actions[index + 1]
+        end
+        @inbounds begin
+            agent.memory_ids[capacity] = opponent_id
+            agent.memory_actions[capacity] = code
+        end
+        used = capacity
     end
 
-    next_index = mod1(agent.memory_cursor + 1, capacity)
-    @inbounds begin
-        agent.memory_ids[next_index] = opponent_id
-        agent.memory_actions[next_index] = code
-    end
-    agent.memory_cursor = next_index
+    agent.memory_cursor = used
     return nothing
 end
 

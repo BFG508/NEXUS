@@ -1,0 +1,10 @@
+{
+  "schema": "nexus.tactical_state.v1",
+  "producer": {"project": "SPARTAN", "version": "0.1.0"},
+  "payload": {
+    "assets": [
+      {"type": "SCOUT", "id": "A-001", "integrity": 90, "delta_v": 500, "beam_target_deg": 90.0, "pointing_error_deg": 0.0},
+      {"type": "RELAY", "id": "A-002", "integrity": 100, "delta_v": 800, "beam_target_deg": 75.0, "pointing_error_deg": 3.0}
+    ]
+  }
+}

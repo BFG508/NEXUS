@@ -38,49 +38,9 @@ The suite is designed for comparative study; agreement between algorithms should
 
 ## NEXUS integration
 
-LEVI contains compatibility adapters under `integrations/`:
+LEVI owns orbital-mechanics calculations and remains independently executable. Repository-level adapters under `../integration/` build `nexus.trajectory_request.v1` from upstream stellar and communication state. The standalone LEVI release deliberately contains no NEXUS-specific integration scripts.
 
-### ASTRA transfer analysis
-
-```matlab
-run('integrations/astra_transfer.m')
-```
-
-Consumes ASTRA-generated planetary orbital elements and constructs approximate transfer geometry for Lambert studies.
-
-### SPARTAN ΔV screening
-
-```matlab
-run('integrations/spartan_dv_check.m')
-```
-
-Reads a SPARTAN fleet snapshot and compares asset budgets with simplified transfer requirements.
-
-### BEAM communication window
-
-```matlab
-run('integrations/beam_comm_window.m')
-```
-
-Combines propagated geometry with an idealized BEAM beamwidth assumption to identify candidate communication windows.
-
-### GAIA mission-planning proxy
-
-```matlab
-run('integrations/gaia_mission_planner.m')
-```
-
-Uses GAIA exoplanet data to construct simplified interstellar mission metrics. This is an exploratory proxy rather than a physically complete interstellar mission design.
-
-### SCALE-style trajectory-risk proxy
-
-```matlab
-run('integrations/scale_trajectory_risk.m')
-```
-
-Runs a local stochastic trajectory-risk calculation inspired by SCALE-style events. It does **not** execute the Scala SCALE engine.
-
-Integration scripts resolve paths from their own location so execution does not depend on the caller's current working directory.
+This replaces the earlier pattern of embedding SCALE-like, BEAM-like, or sibling-specific proxy logic inside MATLAB scripts.
 
 ## Reproducibility
 
@@ -110,7 +70,6 @@ LEVI/
 │   ├── lambhodograph.m            Hodograph solver
 │   ├── optimizationSimplex.m      Timing/ΔV optimization
 │   └── zonalEquationMotion.m      Zonal-perturbation ODE
-├── integrations/                  NEXUS compatibility scripts
 ├── tests/
 │   └── test_smoke.m               MATLAB smoke tests
 ├── LEVI.mlx                       Interactive Live Script
@@ -133,8 +92,6 @@ For interactive analysis, open:
 LEVI.mlx
 ```
 
-Individual integration adapters may be run after their producer project has generated the required input artifact.
-
 ## Tests and CI
 
 Run the MATLAB tests from the repository root with:
@@ -152,6 +109,5 @@ assertSuccess(results);
 - The Lambert implementations solve idealized boundary-value problems and must be checked for the intended geometry/time-of-flight branch.
 - `run_demo.m` uses a two-body Earth reference and is a smoke demonstration, not an orbit-determination scenario.
 - J2/J3 studies are limited to the force model implemented in `zonalEquationMotion.m`.
-- NEXUS adapters use simplified mission, communication, or risk assumptions and are not replacements for high-fidelity ephemeris/mission analysis.
-- The SCALE-style integration is a local proxy and does not invoke SCALE itself.
+- NEXUS adapters are repository-level consumers/producers; the standalone LEVI release contains no sibling-model proxy implementations.
 - LEVI is an engineering study suite, not flight-certified GNC/FDS software.

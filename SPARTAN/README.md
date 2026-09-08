@@ -71,27 +71,9 @@ This makes the state transition explicit and avoids ambiguity between bootstrap 
 
 ## NEXUS integration
 
-### GAIA probe deployment
+SPARTAN owns tactical asset persistence and its fixed-width import/snapshot formats. Repository-level adapters under `../integration/` normalize an exported snapshot as `nexus.tactical_state.v1`; stochastic events can then be applied explicitly before BEAM or other consumers evaluate the resulting state.
 
-```bash
-python integrations/gaiaProbeDeployer.py
-```
-
-The adapter reads processed GAIA exoplanet state, selects candidate targets under its exploratory habitability logic, and queues PROBE/RELAY assets for SPARTAN import.
-
-### SCALE combat events
-
-SCALE's `spartanCombatSim.py` consumes a SPARTAN snapshot/bootstrap and queues fixed-width state updates rather than mutating the indexed database directly.
-
-### ASTRA asset generation
-
-ASTRA can queue advanced generated civilizations/assets into `spartan_import.txt` using the fixed-width interoperability format.
-
-### BEAM and LEVI consumers
-
-BEAM and LEVI can read refreshed SPARTAN state for steering/trajectory analyses. Generate `spartan_snapshot.txt` before those read-only studies when the live database has changed.
-
-These integrations are compatibility adapters, not a stable cross-project protocol.
+The standalone SPARTAN release contains no sibling-project integration code. External changes must enter through the documented import/snapshot boundary rather than by editing bootstrap files behind the active database.
 
 ## Reproducibility
 
@@ -128,10 +110,8 @@ cobc -x -free -o spartan_audit_tool spartan_audit_tool.cbl
 
 ```text
 SPARTAN/
-├── integrations/
-│   └── gaiaProbeDeployer.py       GAIA -> SPARTAN adapter
 ├── tests/
-│   └── test_spartan.py            Python format/integration tests
+│   └── test_spartan.py            Python format/state tests
 ├── spartanGen.py                  Bootstrap telemetry generator
 ├── spartan_core.cbl               Indexed DB + interactive terminal + physics demo
 ├── spartan_import_tool.cbl        Apply queued fixed-width updates

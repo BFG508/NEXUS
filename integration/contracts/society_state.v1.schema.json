@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/BFG508/NEXUS/blob/main/integration/contracts/society_state.v1.schema.json",
+  "title": "nexus.society_state.v1",
+  "description": "A model-state snapshot exported from EDEN metrics.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.society_state.v1"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "project",
+        "version"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "generation",
+        "population_size",
+        "doctrine_fractions",
+        "cooperation_rate"
+      ],
+      "properties": {
+        "generation": {
+          "type": "integer"
+        },
+        "population_size": {
+          "type": "integer"
+        },
+        "doctrine_fractions": {
+          "type": "object"
+        },
+        "cooperation_rate": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

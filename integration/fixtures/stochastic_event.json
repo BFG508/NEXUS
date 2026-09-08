@@ -1,0 +1,10 @@
+{
+  "schema": "nexus.stochastic_event.v1",
+  "producer": {"project": "SCALE", "version": "0.1.0"},
+  "payload": {
+    "event_id": "fixture-event-001",
+    "event_type": "attrition",
+    "severity": 0.4,
+    "modifiers": {"asset_ids": ["A-001"], "integrity_delta": -15, "delta_v_delta": -20}
+  }
+}
