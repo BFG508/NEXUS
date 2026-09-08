@@ -1,0 +1,15 @@
+[concepts.compassion]
+label = "Compassion"
+terms = ["compassion", "mercy", "kindness"]
+
+[concepts.duty]
+label = "Duty"
+terms = ["duty", "obligation", "responsibility"]
+
+[concepts.existence]
+label = "Existence"
+terms = ["existence", "being", "life"]
+
+[concepts.soul]
+label = "Soul"
+terms = ["soul", "spirit"]

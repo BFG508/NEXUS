@@ -1,0 +1,68 @@
+[project]
+root = ".."
+corpora = "config/corpora.toml"
+concepts = "config/concepts.toml"
+stopwords = "config/stopwords_en.txt"
+valence_lexicon = "config/valence_en.toml"
+results_dir = "results"
+
+[provenance]
+require_checksums = true
+require_translator_for_translation = true
+
+[preprocessing]
+minimum_token_length = 1
+remove_stopwords_for_dtm = true
+
+[frequency]
+normalization_scale = 1000000.0
+
+[cooccurrence]
+window = 4
+distance_weighted = true
+
+[embeddings]
+window = 4
+minimum_count = 1
+maximum_vocabulary = 2000
+dimension = 16
+minimum_anchors = 20
+
+[alignment]
+minimum_frequency = 1
+maximum_frequency_ratio = 6.0
+maximum_anchors = 200
+
+[controls]
+frequency_ratio = 3.0
+maximum_controls = 30
+minimum_controls = 5
+
+[sentiment]
+window = 7
+negation_window = 3
+
+[statistics]
+frequency_bootstrap_replicates = 200
+semantic_bootstrap_replicates = 50
+semantic_bootstrap_maximum_vocabulary = 600
+bootstrap_block_size = 60
+minimum_valid_bootstrap_replicates = 30
+minimum_valid_bootstrap_fraction = 0.8
+confidence_level = 0.95
+random_seed = 20260906
+
+[visualization]
+maximum_labels = 24
+
+[[comparisons]]
+reference = "ancient"
+target = "enlightenment"
+
+[[comparisons]]
+reference = "enlightenment"
+target = "speculative"
+
+[[comparisons]]
+reference = "ancient"
+target = "speculative"
