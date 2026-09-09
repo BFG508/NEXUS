@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "name": "minimal-json-demo",
+  "seed": 42,
+  "working_directory": ".",
+  "steps": {
+    "version": {
+      "command": "go",
+      "args": ["version"],
+      "timeout_seconds": 10
+    }
+  }
+}

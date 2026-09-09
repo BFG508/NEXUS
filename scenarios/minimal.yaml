@@ -1,0 +1,23 @@
+version: 1
+name: minimal-demo
+seed: 42
+working_directory: .
+
+steps:
+  prepare:
+    command: sh
+    args:
+      - -c
+      - printf 'seed=%s\n' "${SEED}" > "${STEP_ARTIFACT_DIR}/message.txt"
+    timeout_seconds: 10
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/message.txt
+
+  consume:
+    command: sh
+    depends_on:
+      - prepare
+    args:
+      - -c
+      - cat "${RUN_DIR}/artifacts/prepare/message.txt"
+    timeout_seconds: 10
