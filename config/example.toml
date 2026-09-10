@@ -1,0 +1,17 @@
+name = "redundant_computer"
+mission_hours = 1000.0
+architecture = "parallel"
+monte_carlo_runs = 50000
+seed = 42
+
+[[components]]
+id = "computer_a"
+distribution = "exponential"
+failure_rate_per_hour = 1.0e-5
+repair_rate_per_hour = 1.0e-2
+
+[[components]]
+id = "computer_b"
+distribution = "weibull"
+shape = 1.5
+scale_hours = 80000.0
