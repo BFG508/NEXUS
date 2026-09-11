@@ -1,0 +1,58 @@
+{
+  "schema": "hermes.run_manifest.v1",
+  "hermes_version": "0.1.0",
+  "run_id": "preview-run",
+  "run_fingerprint": "0000000000000000000000000000000000000000000000000000000000000000",
+  "status": "succeeded",
+  "scenario": {
+    "name": "preview",
+    "path": "/tmp/preview/scenario.yaml",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "seed": 42
+  },
+  "working_directory": "/tmp/preview",
+  "runtime": {
+    "go_version": "go1.22.0",
+    "os": "darwin",
+    "arch": "arm64",
+    "git_commit": "0123456789abcdef",
+    "git_dirty": false
+  },
+  "started_at": "2026-09-09T12:00:00.000000000Z",
+  "finished_at": "2026-09-09T12:00:01.250000000Z",
+  "telemetry_path": "/tmp/preview/telemetry.jsonl",
+  "steps": [
+    {
+      "name": "prepare",
+      "status": "succeeded",
+      "command": "sh",
+      "args": ["-c", "echo preview"],
+      "started_at": "2026-09-09T12:00:00.100000000Z",
+      "finished_at": "2026-09-09T12:00:00.400000000Z",
+      "duration_ms": 300,
+      "exit_code": 0,
+      "stdout_log": "/tmp/preview/logs/prepare.stdout.log",
+      "stderr_log": "/tmp/preview/logs/prepare.stderr.log"
+    },
+    {
+      "name": "consume",
+      "status": "succeeded",
+      "depends_on": ["prepare"],
+      "command": "sh",
+      "args": ["-c", "cat output.txt"],
+      "started_at": "2026-09-09T12:00:00.500000000Z",
+      "finished_at": "2026-09-09T12:00:01.000000000Z",
+      "duration_ms": 500,
+      "exit_code": 0,
+      "stdout_log": "/tmp/preview/logs/consume.stdout.log",
+      "stderr_log": "/tmp/preview/logs/consume.stderr.log",
+      "artifacts": [
+        {
+          "path": "/tmp/preview/artifacts/consume/output.txt",
+          "size_bytes": 7,
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ]
+    }
+  ]
+}
