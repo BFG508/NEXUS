@@ -176,6 +176,14 @@ julia --project=EDEN -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
 
 The suite covers strategy behavior, bounded LRU memory, cultural/biological evolution, simulation metrics, ensemble UQ, invasion summaries, matrix-completeness ESS logic, and theory-validation helpers. The NEXUS `eden.yml` workflow executes this suite on GitHub Actions.
 
+On a headless machine, disable automatic package precompilation and run the tests without generating compiled module caches:
+
+```bash
+JULIA_PKG_PRECOMPILE_AUTO=0 julia --project=EDEN -e 'using Pkg; Pkg.instantiate(); Pkg.test(; julia_args=["--compiled-modules=no"])'
+```
+
+This avoids initializing the unused GLMakie backend during project-wide precompilation. The simulation and tests do not require OpenGL; `scripts/plot_results.jl` uses CairoMakie for file output, while `scripts/run_interactive.jl` requires a graphical display. These settings are also used by headless CI.
+
 ## Important modelling assumptions
 
 - Prisoner's Dilemma payoff is game utility, not a moral score or physical resource.

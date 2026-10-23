@@ -20,6 +20,8 @@ The project is intended for algorithm study, numerical comparison, and NEXUS tra
 
 The suite is designed for comparative study; agreement between algorithms should be checked for the specific geometry/time-of-flight regime being analyzed.
 
+The elliptic Gauss solver brackets its scalar transfer relation and sums the Gauss series to convergence. Regression tests check circular arcs from 30° to 170° against analytical velocities, verify arrival by Kepler propagation, and recover eccentric-orbit transfers.
+
 ### Transfer timing and ΔV optimization
 
 `optimizationSimplex.m` and `costDeltaV.m` provide a custom simplex-based search over transfer timing/cost. `computeTBI.m` supports time-bound calculations used in multi-revolution studies.

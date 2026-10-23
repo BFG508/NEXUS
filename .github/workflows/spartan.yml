@@ -13,8 +13,6 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install pytest
-      - working-directory: SPARTAN
-        run: pytest -q
       - name: Compile GnuCOBOL sources
         working-directory: SPARTAN
         run: |
@@ -24,3 +22,5 @@ jobs:
           cobc -x -free -o spartan_audit_tool spartan_audit_tool.cbl
           cobc -x -free -o spartan_import_tool spartan_import_tool.cbl
           cobc -x -free -o spartan_snapshot_tool spartan_snapshot_tool.cbl
+      - working-directory: SPARTAN
+        run: pytest -q

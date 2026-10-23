@@ -24,7 +24,7 @@ function [v1, v2, deltaV1, deltaV2, deltaV, flag, a, e] = lambertGauss(r1, v1_in
 %==========================================================================
 
     %------------------------------ Config ---------------------------------
-    tol             = 1e-10;      % Convergence tolerance for fixed-point iteration on y
+    tol             = 1e-10;      % Relative tolerance on elliptic-domain boundary
     maxIter          = 100;       % Safety limit for iterations
     verify_fg_tol    = 1e-2;      % Tolerance for f*gdot - fdot*g ≈ 1 check
     small            = 1e-12;     % Small number for zero-guards
@@ -91,26 +91,57 @@ function [v1, v2, deltaV1, deltaV2, deltaV, flag, a, e] = lambertGauss(r1, v1_in
     end
     m = (mu * flightTime^2) / denom_cubed;
 
-    %---------------- Fixed-point solve for y (Moulton-like) ----------------
-    y = 1.0;
-    y_prev = Inf;
-    iter = 0;
-
-    while abs(y - y_prev) > tol && iter < maxIter
-        x1 = m / (y^2) - l;
-
-        % Series for x2 = 4/3*(1 + 6/5 x1 + 6*8/(5*7) x1^2 + 6*8*10/(5*7*9) x1^3 + 6*8*10*12/(5*7*9*11) x1^4)
-        x1p = [x1, x1^2, x1^3, x1^4];
-        coeff = [6/5, 6*8/(5*7), 6*8*10/(5*7*9), 6*8*10*12/(5*7*9*11)];
-        x2 = (4/3) * (1 + sum(coeff .* x1p));
-
-        y_prev = y;
-        y = 1 + x2*(l + x1);
-        iter = iter + 1;
+    %---------------- Bracketed solve of the elliptic Gauss relation --------
+    % y = 1 + x2(x1)*(l+x1), m = y^2*(l+x1). On the elliptic
+    % branch x1 lies in [0,1), and the residual is monotone increasing.
+    lower_bound = 0.0;
+    upper_bound = 0.5;
+    lower_residual = l * (1 + (4/3)*l)^2 - m;
+    if lower_residual > tol * max(1.0, m)
+        flag = 'No elliptic solution in Gauss convergence domain';
+        return;
+    end
+    bracketed = false;
+    for bracket_iter = 1:20
+        [x2, series_ok] = gauss_series(upper_bound);
+        if ~series_ok
+            flag = 'No convergence summing Gauss series';
+            return;
+        end
+        upper_y = 1 + x2*(l + upper_bound);
+        if (l + upper_bound)*upper_y^2 >= m
+            bracketed = true;
+            break;
+        end
+        upper_bound = 0.5 * (1 + upper_bound);
+    end
+    if ~bracketed
+        flag = 'No elliptic solution bracket for Gauss equation';
+        return;
     end
 
-    if iter >= maxIter
-        flag = 'No convergence solving Gauss equation for y';
+    converged = false;
+    for iter = 1:maxIter
+        x1 = 0.5 * (lower_bound + upper_bound);
+        [x2, series_ok] = gauss_series(x1);
+        if ~series_ok
+            flag = 'No convergence summing Gauss series';
+            return;
+        end
+        y = 1 + x2*(l + x1);
+        residual = (l + x1)*y^2 - m;
+        if abs(residual) <= 1e-12 * max(1.0, m)
+            converged = true;
+            break;
+        end
+        if residual > 0
+            upper_bound = x1;
+        else
+            lower_bound = x1;
+        end
+    end
+    if ~converged
+        flag = 'No convergence solving Gauss equation';
         return;
     end
 
@@ -187,4 +218,20 @@ function [v1, v2, deltaV1, deltaV2, deltaV, flag, a, e] = lambertGauss(r1, v1_in
             flag = 'Invalid orbital parameters after solution';
         end
     end
+end
+
+function [x2, converged] = gauss_series(x1)
+% Sum the Gauss series to convergence, rather than truncating at x1^4.
+term = 1.0;
+series = 1.0;
+converged = false;
+for n = 1:1000
+    term = term * x1 * (2*n + 4) / (2*n + 3);
+    series = series + term;
+    if abs(term) <= 1e-14 * max(1.0, abs(series))
+        converged = true;
+        break;
+    end
+end
+x2 = (4/3) * series;
 end

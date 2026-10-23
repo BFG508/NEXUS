@@ -53,7 +53,7 @@
                        MOVE IN-NODE-ID TO DB-NODE-ID
                        MOVE IN-INTEGRITY TO DB-INTEGRITY
                        MOVE IN-DELTA-V TO DB-DELTA-V
-                       WRITE DB-REC
+                       WRITE DB-REC END-WRITE
                    NOT INVALID KEY
                        MOVE IN-NODE-TYPE TO DB-NODE-TYPE
                        MOVE IN-INTEGRITY TO DB-INTEGRITY
