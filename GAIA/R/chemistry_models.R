@@ -12,11 +12,11 @@ simulate_atmosphere <- function(biosphere_class, esi_score) {
   base_gases <- c("N2", "CO2", "H2O")
 
   # Add trace gases based on the environment to simulate astrobiological outgassing
-  if (biosphere_class == "Mesophile (Earth-like)" && esi_score > 0.85) {
+  if (isTRUE(biosphere_class == "Mesophile (Earth-like)" && esi_score > 0.85)) {
     return(c(base_gases, "O2", "CH4", "O3")) # Strong biosignature profile
   } else if (biosphere_class %in% c("Thermophile", "Hyperthermophile")) {
     return(c(base_gases, "CH4", "H2S")) # Extremophile methanogenesis and sulfur reduction
-  } else if (biosphere_class == "Psychrophile") {
+  } else if (isTRUE(biosphere_class == "Psychrophile")) {
     return(c(base_gases, "CH4")) # Low metabolism, single trace gas
   } else {
     return(c(base_gases, "Ar")) # Sterile or inert environments
@@ -31,6 +31,7 @@ simulate_atmosphere <- function(biosphere_class, esi_score) {
 evaluate_biosignatures <- function(planet_data, dict_path = "data/raw/biosignature_pairs.csv") {
 
   biosignature_dict <- read_csv(dict_path, show_col_types = FALSE)
+  names(biosignature_dict) <- trimws(names(biosignature_dict))
 
   analyzed_planets <- planet_data %>%
     # rowwise() allows us to apply the simulation function to each planet individually

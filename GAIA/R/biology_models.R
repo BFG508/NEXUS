@@ -12,6 +12,7 @@ evaluate_extremophile_viability <- function(planet_data, limits_path = "data/raw
 
   # Load the biological limits database
   bio_limits <- read_csv(limits_path, show_col_types = FALSE)
+  names(bio_limits) <- trimws(names(bio_limits))
 
   # Determine absolute temperature boundaries for known terrestrial biology
   abs_min_temp <- min(bio_limits$min_temp_k)
