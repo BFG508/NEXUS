@@ -6,6 +6,20 @@
 _release_assets/
 _local_assets/
 
+# Local agent, assistant and cloud state (at any directory depth)
+.awx/
+.aws/
+.agent/
+.agents/
+.agentws/
+.codex/
+.claude/
+.cursor/
+.gemini/
+.windsurf/
+.opencode/
+.continue/
+
 # OS / editors
 .DS_Store
 Thumbs.db
@@ -107,3 +121,14 @@ GAIA/renv/cellar/
 GAIA/renv/lock/
 GAIA/renv/python/
 GAIA/renv/sandbox/
+
+# Go
+HERMES/hermes
+.hermes/
+
+# Swift / Xcode
+.build/
+.swiftpm/
+DerivedData/
+xcuserdata/
+*.xcuserstate

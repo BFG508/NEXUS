@@ -8,7 +8,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILT = ROOT / "_release_assets" / "built"
-FORBIDDEN_PARTS = {"integration", "integrations", ".git"}
+FORBIDDEN_PARTS = {
+    "integration", "integrations", ".git",
+    ".awx", ".aws", ".agent", ".agents", ".agentws", ".codex",
+    ".claude", ".cursor", ".gemini", ".windsurf", ".opencode", ".continue",
+}
 
 
 def check(path: Path) -> None:
@@ -23,7 +27,7 @@ def check(path: Path) -> None:
             lowered = {part.lower() for part in name.parts}
             bad = lowered & FORBIDDEN_PARTS
             if bad:
-                raise SystemExit(f"[FAIL] {path.name}: integration/repository metadata leaked into {name}")
+                raise SystemExit(f"[FAIL] {path.name}: integration/repository/local metadata leaked into {name}")
     print(f"[OK] {path.name}")
 
 
@@ -31,7 +35,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("archives", nargs="*", type=Path)
     args = parser.parse_args()
-    archives = args.archives or sorted(BUILT.glob("*.zip"))
+    archives = args.archives or sorted(BUILT.glob("*/*.zip"))
     if not archives:
         raise SystemExit("No release ZIPs found; run build_release_assets.py first")
     for archive in archives:

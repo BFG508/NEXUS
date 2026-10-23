@@ -1,0 +1,4 @@
+{"timestamp":"2026-09-09T12:00:00Z","run_id":"preview-run","state":"running","message":"run started"}
+{"timestamp":"2026-09-09T12:00:00.1Z","run_id":"preview-run","step":"prepare","state":"running","message":"sh"}
+{"timestamp":"2026-09-09T12:00:00.4Z","run_id":"preview-run","step":"prepare","state":"succeeded"}
+{"timestamp":"2026-09-09T12:00:01.25Z","run_id":"preview-run","state":"succeeded","message":"run completed"}

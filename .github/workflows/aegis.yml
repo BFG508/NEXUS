@@ -1,0 +1,30 @@
+name: AEGIS CI
+on:
+  push:
+    paths:
+      - 'AEGIS/**'
+      - '.github/workflows/aegis.yml'
+  pull_request:
+    paths:
+      - 'AEGIS/**'
+      - '.github/workflows/aegis.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Clippy
+        run: cargo clippy --manifest-path AEGIS/Cargo.toml --all-targets
+      - name: Test
+        run: cargo test --manifest-path AEGIS/Cargo.toml
+      - name: Validate TOML and JSON examples
+        run: |
+          cargo run --quiet --manifest-path AEGIS/Cargo.toml -- validate AEGIS/config/example.toml
+          cargo run --quiet --manifest-path AEGIS/Cargo.toml -- validate AEGIS/config/example.json
+      - name: Analyze example
+        run: cargo run --quiet --manifest-path AEGIS/Cargo.toml -- analyze AEGIS/config/example.toml --output "${RUNNER_TEMP}/aegis-analysis.json"
+      - name: Compile benchmark
+        run: cargo bench --manifest-path AEGIS/Cargo.toml --bench monte_carlo --no-run

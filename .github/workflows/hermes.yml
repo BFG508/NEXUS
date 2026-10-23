@@ -1,0 +1,45 @@
+name: HERMES CI
+on:
+  push:
+    paths:
+      - 'HERMES/**'
+      - 'integration/scenarios/hermes_v0.1_smoke.yaml'
+      - 'integration/adapters/apply_scale_event.py'
+      - 'integration/adapters/beam_from_tactical.py'
+      - 'integration/adapters/build_levi_request.py'
+      - 'integration/fixtures/tactical_state.json'
+      - 'integration/fixtures/stochastic_event.json'
+      - 'integration/fixtures/stellar_system.json'
+      - '.github/workflows/hermes.yml'
+  pull_request:
+    paths:
+      - 'HERMES/**'
+      - 'integration/scenarios/hermes_v0.1_smoke.yaml'
+      - 'integration/adapters/apply_scale_event.py'
+      - 'integration/adapters/beam_from_tactical.py'
+      - 'integration/adapters/build_levi_request.py'
+      - 'integration/fixtures/tactical_state.json'
+      - 'integration/fixtures/stochastic_event.json'
+      - 'integration/fixtures/stellar_system.json'
+      - '.github/workflows/hermes.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+      - name: Unit and end-to-end tests
+        working-directory: HERMES
+        run: go test ./...
+      - name: Validate NEXUS smoke scenario
+        run: go -C HERMES run ./cmd/hermes validate ../integration/scenarios/hermes_v0.1_smoke.yaml
+      - name: Execute NEXUS smoke scenario
+        run: |
+          go -C HERMES run ./cmd/hermes run \
+            --runs-dir "${RUNNER_TEMP}/hermes-runs" \
+            --run-id ci-smoke \
+            ../integration/scenarios/hermes_v0.1_smoke.yaml
+      - name: Inspect NEXUS smoke run
+        run: go -C HERMES run ./cmd/hermes inspect "${RUNNER_TEMP}/hermes-runs/ci-smoke"

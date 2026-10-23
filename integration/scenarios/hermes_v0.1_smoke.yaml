@@ -1,0 +1,73 @@
+version: 1
+name: nexus-hermes-v0.1-smoke
+seed: 42
+working_directory: ../..
+
+steps:
+  scale_spartan:
+    command: python3
+    args:
+      - integration/adapters/apply_scale_event.py
+      - integration/fixtures/tactical_state.json
+      - integration/fixtures/stochastic_event.json
+      - ${STEP_ARTIFACT_DIR}/tactical_state.json
+    timeout_seconds: 30
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/tactical_state.json
+
+  beam:
+    command: python3
+    depends_on:
+      - scale_spartan
+    args:
+      - integration/adapters/beam_from_tactical.py
+      - ${RUN_DIR}/artifacts/scale_spartan/tactical_state.json
+      - ${STEP_ARTIFACT_DIR}/communication_state.json
+    timeout_seconds: 30
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/communication_state.json
+
+  aegis_case:
+    command: python3
+    depends_on:
+      - beam
+    args:
+      - integration/adapters/build_aegis_case.py
+      - ${RUN_DIR}/artifacts/scale_spartan/tactical_state.json
+      - ${RUN_DIR}/artifacts/beam/communication_state.json
+      - integration/policies/aegis_from_nexus.example.json
+      - ${STEP_ARTIFACT_DIR}/aegis_case.toml
+    timeout_seconds: 30
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/aegis_case.toml
+
+  aegis:
+    command: cargo
+    depends_on:
+      - aegis_case
+    args:
+      - run
+      - --quiet
+      - --manifest-path
+      - AEGIS/Cargo.toml
+      - --
+      - analyze
+      - ${RUN_DIR}/artifacts/aegis_case/aegis_case.toml
+      - --output
+      - ${STEP_ARTIFACT_DIR}/aegis_analysis.json
+    timeout_seconds: 120
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/aegis_analysis.json
+
+  levi_request:
+    command: python3
+    depends_on:
+      - beam
+    args:
+      - integration/adapters/build_levi_request.py
+      - integration/fixtures/stellar_system.json
+      - ${RUN_DIR}/artifacts/beam/communication_state.json
+      - ${STEP_ARTIFACT_DIR}/trajectory_request.json
+    timeout_seconds: 30
+    artifacts:
+      - ${STEP_ARTIFACT_DIR}/trajectory_request.json

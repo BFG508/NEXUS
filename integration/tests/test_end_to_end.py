@@ -8,6 +8,7 @@ from eden_initialization_to_config import convert as initialization_to_config
 from apply_scale_event import apply_event
 from beam_from_tactical import build_communication_state
 from build_levi_request import build_request
+from build_aegis_case import build_case as build_aegis_case
 from stellar_to_gaia_csv import convert
 from spartan_snapshot_to_contract import parse_snapshot
 
@@ -80,3 +81,18 @@ def test_eden_initialization_translates_to_generic_runner_config(tmp_path):
     assert "generations = 25" in text
     assert "seed = 9" in text
     assert "[initial_doctrine_fractions]" in text
+
+
+
+def test_nexus_to_aegis_mapping_requires_explicit_policy():
+    tactical = load_contract(FIXTURES / "tactical_state.json")
+    communication = build_communication_state(tactical)
+    policy_path = BASE / "policies" / "aegis_from_nexus.example.json"
+    policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    toml = build_aegis_case(tactical, communication, policy)
+    assert 'name = "aegis-nexus-demo-v1"' in toml
+    assert 'id = "A-001"' in toml
+    assert 'id = "A-002"' in toml
+    assert 'distribution = "exponential"' in toml
+    # The mapping is visible in the supplied policy rather than hidden in AEGIS.
+    assert policy["integrity_loss_rate_multiplier_per_percent"] == 0.01

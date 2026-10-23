@@ -4,6 +4,8 @@ NEXUS is a monorepo of independently executable projects connected through a rep
 
 ## Domain ownership
 
+- **AEGIS:** reliability, availability, fault/degradation models, FDIR coverage, and survivability analysis.
+
 - **ASTRA:** stellar systems, planets, geology proxies, and civilization initial conditions.
 - **GAIA:** exoplanet data processing, habitability, and astrobiology proxies.
 - **ETHOS:** corpus provenance, lexical/concept analysis, distributional semantics, and semantic-shift uncertainty.
@@ -12,6 +14,55 @@ NEXUS is a monorepo of independently executable projects connected through a rep
 - **SPARTAN:** tactical asset persistence and fixed-width operational state.
 - **BEAM:** ideal phased-array steering and array-factor calculations.
 - **LEVI:** orbital mechanics, Lambert transfers, and trajectory studies.
+
+## Platform ownership
+
+- **HERMES:** generic heterogeneous workflow orchestration, dependency scheduling, subprocess execution, provenance, and artifacts. It contains no scientific model.
+- **ATLAS:** Swift-based offline/live visualization of run manifests, artifacts, timelines, and future telemetry. It consumes results rather than implementing scientific models.
+
+HERMES v0.1.0, AEGIS v0.1.0, and ATLAS v0.1.0 are implemented. HERMES participates only at the orchestration layer. AEGIS remains a domain-agnostic reliability engine, while NEXUS-specific reliability mappings live under `integration/` and require explicit policies. ATLAS consumes HERMES execution/provenance records and declared artifacts without embedding sibling scientific models. All standalone releases remain isolated from repository-level adapters and contracts.
+
+## HERMES orchestration boundary
+
+HERMES consumes executable scenario definitions rather than scientific contracts. The canonical v0.1.0 smoke path is:
+
+```text
+SCALE stochastic_event.v1 fixture
+        |
+        v
+NEXUS adapter -> SPARTAN tactical_state.v1
+        |
+        v
+NEXUS adapter -> BEAM communication_state.v1
+        |\
+        | \-> explicit reliability policy -> AEGIS v0.1.0 analysis
+        |
+        \----> NEXUS adapter -> LEVI trajectory_request.v1
+```
+
+The scenario definition is stored in `integration/scenarios/hermes_v0.1_smoke.yaml`. This placement is intentional: the commands know about NEXUS, while the HERMES engine only knows about steps, dependencies, processes, artifacts, logs, and provenance.
+
+## ATLAS visualization boundary
+
+ATLAS v0.1.0 consumes the generic HERMES v0.1.0 run record rather than importing HERMES implementation code. Its offline input boundary is:
+
+```text
+HERMES execution
+   |
+   +-- manifest.json      hermes.run_manifest.v1
+   +-- telemetry.jsonl
+   +-- artifacts/
+   +-- logs/
+   |
+   v
+ATLAS v0.1.0
+   +-- structural validation
+   +-- timeline reconstruction
+   +-- artifact/hash inspection
+   +-- provenance presentation
+```
+
+ATLAS does not infer scientific meaning from an artifact merely because HERMES recorded it. Project-specific scientific visualization adapters, when required, remain a separate NEXUS integration concern.
 
 ## Interface rule
 
@@ -54,4 +105,4 @@ This keeps the assumption visible and reproducible.
 
 `integration/` belongs to NEXUS, not to any standalone project release. Release tooling validates that neither `integration/` nor historical project-local `integrations/` directories appear inside generated project ZIPs.
 
-For public GitHub releases, the replacement script creates isolated synthetic tag commits from the standalone trees so GitHub's automatic source archives are project-only as well.
+For public GitHub releases, the append-only publisher creates isolated synthetic tag commits from standalone trees so GitHub's automatic source archives are project-only as well. Established release tags are never deleted or retargeted by current tooling.

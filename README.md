@@ -2,7 +2,7 @@
 
 **N**etwork of **E**xperimental e**X**plorations, **U**tilities & **S**ystems
 
-NEXUS is a multi-language scientific and engineering monorepo built from independent projects that can also participate in explicit cross-domain experiments. The suite spans stellar-system generation, astrobiology, semantic change, evolutionary social dynamics, stochastic systems, tactical state, phased-array communications, and orbital mechanics.
+NEXUS is a multi-language scientific and engineering monorepo built from independent projects that can also participate in explicit cross-domain experiments. The suite spans stellar-system generation, astrobiology, semantic change, evolutionary social dynamics, stochastic systems, tactical state, phased-array communications, orbital mechanics, reliability engineering, heterogeneous orchestration, and scientific-result visualization.
 
 Each project owns its model, runtime, tests, version, and standalone release. Cross-project behavior is kept outside the project directories under `integration/`, where versioned contracts and adapters exchange data without copying sibling-project logic into release artifacts.
 
@@ -12,16 +12,21 @@ The repository is intended for model development, reproducible experimentation, 
 
 | Project | Domain | Primary language | Current version |
 |---|---|---|---:|
+| **AEGIS** | Reliability, availability, fault trees, Markov analysis, and survivability | Rust | 0.1.0 |
 | **ASTRA** | Procedural stellar systems, planets, geology proxies, and civilization initial conditions | Julia | 0.1.0 |
+| **ATLAS** | Layered visualization and exploration of NEXUS run artifacts and telemetry | Swift | 0.1.0 |
 | **BEAM** | Idealized phased-array steering and array-factor analysis | Python | 0.1.0 |
 | **EDEN** | Ethical/cultural/biological agent dynamics and evolutionary-game experiments | Julia | 0.3.0 |
 | **ETHOS** | Reproducible diachronic semantic and conceptual analysis of text corpora | Julia | 1.1.0 |
 | **GAIA** | Exoplanet habitability and astrobiology exploration | R / Shiny | 0.1.0 |
+| **HERMES** | Heterogeneous DAG orchestration, process execution, provenance, and artifacts | Go | 0.1.0 |
 | **LEVI** | Lambert transfers, propagation, and orbital-mechanics studies | MATLAB | 0.1.0 |
 | **SCALE** | Dice parsing, stochastic state transitions, entropy fusion, and PI compensation | Scala | 0.1.0 |
 | **SPARTAN** | Tactical aerospace asset state and indexed persistence | COBOL / Python | 0.1.0 |
 
 Each project has its own `README.md` describing implemented capabilities, native requirements, usage, tests, reproducibility, and modelling limitations.
+
+HERMES, AEGIS, and ATLAS are now implemented at **v0.1.0**. HERMES provides reproducible heterogeneous orchestration, AEGIS provides reliability, availability, fault-tree, Markov, and Monte Carlo survivability analysis, and ATLAS provides offline validation, inspection, timeline reconstruction, artifact verification, run discovery, and a macOS SwiftUI client for HERMES run records.
 
 ## Integration architecture
 
@@ -118,11 +123,11 @@ repository workflows
 NEXUS-only adapters
 ```
 
-`scripts/build_release_assets.py` builds these isolated archives and `scripts/check_release_isolation.py` verifies that integration code has not leaked into them.
+`scripts/build_release_assets.py` builds the current isolated archive for each project under `_release_assets/built/PROJECT/`; only that project's current version is retained. `scripts/check_release_isolation.py` verifies that integration code has not leaked into them. Preserved historical archives live separately under `_release_assets/historical/PROJECT/`.
 
-For GitHub, `scripts/replace_github_releases.sh --execute` can replace the existing project releases with tags whose synthetic source trees contain only the standalone project. This also fixes GitHub's automatically generated **Source code (zip/tar.gz)** archives, which would otherwise include the whole monorepo when a normal `main` commit is tagged.
+The canonical public history is now immutable. New GitHub releases are published append-only with `scripts/publish_github_releases.sh`, which creates an isolated synthetic tag commit containing only the selected standalone project. This keeps both the attached ZIP and GitHub's automatic **Source code (zip/tar.gz)** archives project-only.
 
-The destructive release-replacement script is intentionally not executed automatically by CI.
+`scripts/replace_github_releases.sh` is retained only as a safety guard and no longer deletes or recreates releases.
 
 ## Reproducibility and data policy
 
@@ -143,11 +148,14 @@ Key rules:
 NEXUS/
 ├── .github/
 │   └── workflows/              Project, integration, and repository CI
+├── AEGIS/
 ├── ASTRA/
+├── ATLAS/
 ├── BEAM/
 ├── EDEN/
 ├── ETHOS/
 ├── GAIA/
+├── HERMES/
 ├── LEVI/
 ├── SCALE/
 ├── SPARTAN/
@@ -163,6 +171,7 @@ NEXUS/
 ├── scripts/
 │   ├── build_release_assets.py
 │   ├── check_release_isolation.py
+│   ├── publish_github_releases.sh
 │   ├── replace_github_releases.sh
 │   └── repo_preflight.py
 ├── CONTRIBUTING.md
@@ -178,8 +187,16 @@ NEXUS/
 There is no single runtime for all NEXUS projects. Run each project with its native toolchain.
 
 ```bash
+# AEGIS
+(cd AEGIS && cargo test)
+
 # ASTRA
 julia --project=ASTRA ASTRA/scripts/generate_sector.jl 10 --seed 42
+
+# ATLAS
+swift test --package-path ATLAS
+swift run --package-path ATLAS atlas validate ATLAS/Resources/PreviewData/run_manifest.json
+swift run --package-path ATLAS atlas inspect ATLAS/Resources/PreviewData/run_manifest.json
 
 # BEAM
 python -m pytest -q BEAM/tests
@@ -192,6 +209,11 @@ julia --project=ETHOS ETHOS/scripts/run_pipeline.jl
 
 # GAIA
 Rscript -e 'setwd("GAIA"); source("scripts/process_data.R")'
+
+# HERMES
+(cd HERMES && go test ./...)
+(cd HERMES && go run ./cmd/hermes validate ../integration/scenarios/hermes_v0.1_smoke.yaml)
+(cd HERMES && go run ./cmd/hermes plan ../integration/scenarios/hermes_v0.1_smoke.yaml)
 
 # SCALE
 (cd SCALE && sbt test)
@@ -212,17 +234,38 @@ Run the central Python integration tests with:
 python -m pytest -q integration/tests
 ```
 
+HERMES v0.1.0 also has a repository-level orchestration smoke scenario that exercises SCALE → SPARTAN → BEAM, an explicit-policy AEGIS v0.1.0 reliability analysis, and LEVI-request generation:
+
+```bash
+(cd HERMES && go run ./cmd/hermes run --runs-dir /tmp/nexus-hermes --run-id smoke ../integration/scenarios/hermes_v0.1_smoke.yaml)
+```
+
+The scenario lives under `integration/`; no NEXUS-specific adapter is packaged inside the standalone HERMES release.
+
+ATLAS v0.1.0 consumes the HERMES v0.1.0 `hermes.run_manifest.v1` record directly as a provenance/platform contract. It can validate and inspect any compatible run directory without importing NEXUS project logic:
+
+```bash
+swift run --package-path ATLAS atlas validate /path/to/hermes-run
+swift run --package-path ATLAS atlas timeline /path/to/hermes-run
+swift run --package-path ATLAS atlas artifacts --verify /path/to/hermes-run
+```
+
+Scientific adapters remain under `integration/`; ATLAS only interprets execution/provenance metadata and declared artifacts.
+
 ## Tests and CI
 
 Project-specific workflows exercise the native runtime, while integration and repository workflows validate the shared boundaries:
 
 ```text
 .github/workflows/
+├── aegis.yml
 ├── astra.yml
+├── atlas.yml
 ├── beam.yml
 ├── eden.yml
 ├── ethos.yml
 ├── gaia.yml
+├── hermes.yml
 ├── levi.yml
 ├── scale.yml
 ├── spartan.yml
@@ -266,7 +309,7 @@ python scripts/build_release_assets.py all
 python scripts/check_release_isolation.py
 ```
 
-See `docs/RELEASES.md` before replacing public GitHub releases.
+The 14 releases listed above are protected historical/public records and are no longer replaced. See `docs/RELEASES.md` before publishing any new release.
 
 ## Important modelling assumptions
 
@@ -279,4 +322,5 @@ See `docs/RELEASES.md` before replacing public GitHub releases.
 - SCALE stochastic outputs require an explicit downstream interpretation before they represent a domain event.
 - SPARTAN is a tactical state/persistence prototype, not operational command software.
 - LEVI and ASTRA model fidelity is defined by their individual assumptions and validation tests.
+- ATLAS validates execution/provenance structure and artifact integrity; it does not certify the scientific correctness of upstream results.
 - End-to-end compatibility tests demonstrate data-flow integrity; they do not validate all scientific assumptions simultaneously.

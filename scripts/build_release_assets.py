@@ -3,39 +3,41 @@
 
 Current releases are assembled only from the selected project directory plus the
 repository-level MIT LICENSE. Cross-project code under ``integration/`` is never
-included. Historical EDEN/ETHOS artifacts are copied from preserved snapshots.
+included. Built assets contain only current releases, grouped by project.
+Historical EDEN/ETHOS archives are preserved separately and selected explicitly.
 """
 from __future__ import annotations
 
 import argparse
-import shutil
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_release_assets" / "built"
-PROJECTS = ("ASTRA", "BEAM", "EDEN", "ETHOS", "GAIA", "LEVI", "SCALE", "SPARTAN")
+HISTORICAL = ROOT / "_release_assets" / "historical"
+PROJECTS = ("AEGIS", "ASTRA", "ATLAS", "BEAM", "EDEN", "ETHOS", "GAIA", "HERMES", "LEVI", "SCALE", "SPARTAN")
 SKIP_PARTS = {
+    ".awx", ".aws", ".agent", ".agents", ".agentws", ".codex",
+    ".claude", ".cursor", ".gemini", ".windsurf", ".opencode", ".continue",
     ".git", ".github", ".venv", "__pycache__", ".pytest_cache", "target", ".metals",
-    ".bsp", ".scala-build", ".Rproj.user", "library", "staging", "exports",
+    ".bsp", ".scala-build", ".build", ".swiftpm", "xcuserdata", "DerivedData",
+    ".Rproj.user", "library", "staging", "exports",
     "integration", "integrations",
 }
 SKIP_NAMES = {
-    ".gitignore", "LICENSE",
+    ".gitignore", "LICENSE", ".DS_Store",
     "spartan_init.txt", "spartan_import.txt", "spartan_snapshot.txt",
     "spartan_tactical.dat", "steering_schedule.json", "jamming_profile.json",
     "combat_log.json", "nasa_exoplanets.csv", "Manifest.toml",
 }
 
 EDEN_HISTORY = {
-    "0.1.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.1.0.zip",
-    "0.2.0": ROOT / "_release_assets" / "EDEN" / "EDEN-v0.2.0.zip",
+    version: HISTORICAL / "EDEN" / f"EDEN-v{version}.zip"
+    for version in ("0.1.0", "0.2.0")
 }
 ETHOS_HISTORY = {
-    "0.1.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.1.0.zip",
-    "0.1.1": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.1.1.zip",
-    "0.2.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v0.2.0.zip",
-    "1.0.0": ROOT / "_release_assets" / "ETHOS" / "ETHOS-v1.0.0.zip",
+    version: HISTORICAL / "ETHOS" / f"ETHOS-v{version}.zip"
+    for version in ("0.1.0", "0.1.1", "0.2.0", "1.0.0")
 }
 
 
@@ -62,40 +64,40 @@ def should_skip(path: Path, project_dir: Path) -> bool:
 def build_current(project: str) -> Path:
     version = version_of(project)
     source = ROOT / project
-    output = OUTPUT / f"{project}-v{version}.zip"
-    OUTPUT.mkdir(parents=True, exist_ok=True)
+    project_output = OUTPUT / project
+    output = project_output / f"{project}-v{version}.zip"
+    project_output.mkdir(parents=True, exist_ok=True)
+    temporary = output.with_suffix(".zip.tmp")
     prefix = f"{project}-v{version}"
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+    with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(source.rglob("*")):
             if not path.is_file() or should_skip(path, source):
                 continue
             archive.write(path, Path(prefix) / path.relative_to(source))
         archive.write(ROOT / "LICENSE", Path(prefix) / "LICENSE")
+    temporary.replace(output)
+    for stale in project_output.glob(f"{project}-v*.zip"):
+        if stale != output:
+            stale.unlink()
     return output
 
 
-def _copy_historical(source: Path) -> Path:
+def _historical_asset(source: Path) -> Path:
     if not source.is_file():
         raise FileNotFoundError(f"Missing historical release asset: {source}")
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    output = OUTPUT / source.name
-    shutil.copy2(source, output)
-    return output
+    return source
 
 
 def build_eden_historical(version: str) -> Path:
-    return _copy_historical(EDEN_HISTORY[version])
+    return _historical_asset(EDEN_HISTORY[version])
 
 
 def build_ethos_historical(version: str) -> Path:
-    return _copy_historical(ETHOS_HISTORY[version])
+    return _historical_asset(ETHOS_HISTORY[version])
 
 
 def build_all() -> list[Path]:
-    outputs = [build_current(project) for project in PROJECTS]
-    outputs.extend(build_eden_historical(version) for version in EDEN_HISTORY)
-    outputs.extend(build_ethos_historical(version) for version in ETHOS_HISTORY)
-    return outputs
+    return [build_current(project) for project in PROJECTS]
 
 
 def main() -> None:
@@ -105,14 +107,17 @@ def main() -> None:
     parser.add_argument("--ethos-historical", choices=sorted(ETHOS_HISTORY))
     args = parser.parse_args()
 
+    if (args.eden_historical and args.project != "EDEN") or (
+        args.ethos_historical and args.project != "ETHOS"
+    ):
+        parser.error("Historical options must match the selected project")
+
     if args.project == "all":
         outputs = build_all()
     elif args.project == "EDEN" and args.eden_historical:
         outputs = [build_eden_historical(args.eden_historical)]
     elif args.project == "ETHOS" and args.ethos_historical:
         outputs = [build_ethos_historical(args.ethos_historical)]
-    elif args.eden_historical or args.ethos_historical:
-        parser.error("Historical options must match the selected project")
     else:
         outputs = [build_current(args.project)]
 

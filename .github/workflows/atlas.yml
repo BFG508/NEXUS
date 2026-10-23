@@ -1,0 +1,32 @@
+name: ATLAS CI
+
+on:
+  push:
+    paths:
+      - 'ATLAS/**'
+      - '.github/workflows/atlas.yml'
+  pull_request:
+    paths:
+      - 'ATLAS/**'
+      - '.github/workflows/atlas.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: swift:6.0.3
+    steps:
+      - uses: actions/checkout@v7
+      - name: Swift version
+        run: swift --version
+      - name: Test ATLASCore
+        run: swift test --package-path ATLAS
+      - name: Build portable core and CLI
+        run: swift build --package-path ATLAS
+      - name: Parse SwiftUI sources without the Apple SDK
+        run: swiftc -frontend -parse ATLAS/Sources/ATLASApp/*.swift
+      - name: Validate preview HERMES manifest
+        run: swift run --package-path ATLAS atlas validate ATLAS/Resources/PreviewData/run_manifest.json
+      - name: Inspect preview HERMES manifest
+        run: swift run --package-path ATLAS atlas inspect ATLAS/Resources/PreviewData/run_manifest.json
+      - name: Reconstruct preview timeline
+        run: swift run --package-path ATLAS atlas timeline ATLAS/Resources/PreviewData/run_manifest.json

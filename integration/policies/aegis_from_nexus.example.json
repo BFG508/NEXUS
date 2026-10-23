@@ -1,0 +1,16 @@
+{
+  "policy_id": "aegis-nexus-demo-v1",
+  "mission_hours": 24.0,
+  "architecture": "series",
+  "monte_carlo_runs": 20000,
+  "seed": 42,
+  "asset_failure_rate_per_hour": {
+    "SCOUT": 0.00002,
+    "RELAY": 0.000015,
+    "default": 0.000025
+  },
+  "integrity_loss_rate_multiplier_per_percent": 0.01,
+  "communication_degraded_multiplier": 1.5,
+  "communication_failed_multiplier": 5.0,
+  "repair_rate_per_hour": 0.01
+}

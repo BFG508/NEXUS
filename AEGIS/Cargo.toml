@@ -1,0 +1,17 @@
+[package]
+name = "aegis"
+version = "0.1.0"
+edition = "2021"
+description = "Reliability, availability and survivability analysis engine"
+
+[lib]
+name = "aegis"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aegis"
+path = "src/main.rs"
+
+[[bench]]
+name = "monte_carlo"
+harness = false

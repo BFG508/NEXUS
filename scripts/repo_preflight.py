@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECTS = ("ASTRA", "BEAM", "EDEN", "ETHOS", "GAIA", "LEVI", "SCALE", "SPARTAN")
+PROJECTS = ("AEGIS", "ASTRA", "ATLAS", "BEAM", "EDEN", "ETHOS", "GAIA", "HERMES", "LEVI", "SCALE", "SPARTAN")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 
 
@@ -30,7 +30,8 @@ def tracked_files_named(filename: str) -> list[Path]:
     except (FileNotFoundError, subprocess.CalledProcessError, UnicodeDecodeError):
         ignored_parts = {
             ".git", ".pytest_cache", "__pycache__", ".venv", "venv",
-            "_release_assets", "_local_assets", "target", "renv", ".julia",
+            "_release_assets", "_local_assets", "target", ".build", ".swiftpm",
+            "DerivedData", "xcuserdata", "renv", ".julia",
         }
         return [
             path for path in ROOT.rglob(filename)
@@ -83,9 +84,13 @@ def main() -> None:
         fail(f"tracked project-level LICENSE files found: {tracked_tree_licenses}")
 
     integration_root = ROOT / "integration"
-    for required in ("README.md", "nexus_contracts.py", "contracts", "adapters", "tests"):
+    for required in ("README.md", "nexus_contracts.py", "contracts", "adapters", "scenarios", "tests"):
         if not (integration_root / required).exists():
             fail(f"integration: missing {required}")
+
+    hermes_smoke = integration_root / "scenarios" / "hermes_v0.1_smoke.yaml"
+    if not hermes_smoke.is_file():
+        fail("integration: missing HERMES v0.1 smoke scenario")
 
     for project in PROJECTS:
         for forbidden_dir in ("integration", "integrations"):
