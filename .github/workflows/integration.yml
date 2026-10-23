@@ -71,6 +71,7 @@ jobs:
           python-version: '3.13'
       - name: Build HERMES and ATLAS on Linux
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           go -C HERMES build -o "${RUNNER_TEMP}/hermes" ./cmd/hermes
           swift build --package-path ATLAS
       - name: Verify successful runs, preparation failures and malformed manifests
